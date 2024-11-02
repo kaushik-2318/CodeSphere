@@ -1,0 +1,60 @@
+.background {
+    background: rgb(29, 39, 52);
+    background: linear-gradient(90deg,
+            rgba(29, 39, 52, 0.3) 0%,
+            rgba(29, 39, 52, 0.6) 40%,
+            rgba(29, 39, 52, 1) 67%,
+            rgba(29, 39, 52, 1) 100%),
+        url("/images/ssscribble rtated.svg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    align-items: center;
+    background-position-x: center;
+    position: absolute;
+    height: 340px;
+}
+
+.backgroundleft {
+    background: rgb(29, 39, 52);
+    background: linear-gradient(90deg,
+            rgba(29, 39, 52, 0.3) 0%,
+            rgba(29, 39, 52, 0.3) 100%),
+        url("/images/nneon.svg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    align-items: center;
+}
+
+.graphbackground {
+    background: linear-gradient(90deg,
+            rgba(17, 25, 40, 0.9) 0%,
+            rgba(17, 25, 40, 0.9) 100%),
+        url("/images/ffflurry.svg");
+    backdrop-filter: blur(10px);
+    background-color: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.125);
+    box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.3);
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 35px;
+    /* box-shadow: 3px 3px 3px 0px rgba(29, 39, 52, 0.5), 3px 3px 3px 3px rgba(29, 39, 52, 0.6), 3px 3px 3px 3px rgb(255, 255, 255); */
+
+    border-radius: 20px;
+    box-shadow: 0px 0px 20px rgba(0, 0, 255, 0.2);
+}
+
+.dropdownbox::before {
+    content: "";
+    position: absolute;
+    top: -0.8vw;
+    right: 1.25vw;
+    width: 20px;
+    height: 20px;
+    rotate: 45deg;
+    border-top: 1px solid rgba(255, 255, 255, 0.125);
+    border-left: 1px solid rgba(255, 255, 255, 0.125);
+    background-color: rgba(17, 25, 40, 0.41);
+}

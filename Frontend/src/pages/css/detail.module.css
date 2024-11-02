@@ -1,0 +1,22 @@
+.background {
+    /* background: linear-gradient(180deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url("/images/nneon.svg"); */
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+        url("/images/template2.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+.dropdownbox::before {
+    content: "";
+    position: absolute;
+    top: -0.8vw;
+    right: 1.25vw;
+    width: 20px;
+    height: 20px;
+    rotate: 45deg;
+    border-top: 1px solid rgba(255, 255, 255, 0.125);
+    border-left: 1px solid rgba(255, 255, 255, 0.125);
+    background-color: rgba(17, 25, 40, 0.41);
+}

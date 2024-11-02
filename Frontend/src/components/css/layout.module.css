@@ -1,0 +1,14 @@
+.right {
+    background: linear-gradient(180deg, rgba(5, 7, 26, 0.3), rgba(5, 7, 26, 0.3)), url("/images/nneon.svg");
+    background-repeat: no-repeat;
+    background-position-x: -50px;
+    background-position-y: 250%;
+    background-size: contain;
+}
+
+.card {
+    backdrop-filter: blur(4px);
+    background-color: rgba(17, 25, 40, 0.64);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.125);
+}

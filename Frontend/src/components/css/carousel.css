@@ -1,0 +1,45 @@
+.swiper {
+  width: 100%;
+  padding-top: 7vh;
+  padding-bottom: 7vh;
+  height: 40vh;
+}
+
+.swiper-slide {
+  background-position: center;
+  background-size: contain;
+  width: 45vh;
+}
+
+@media (max-width:890px) {
+  .swiper-slide {
+    width: 300px;
+  }
+}
+
+@media (max-width:670px) {
+  .swiper {
+    padding-top: 9vh;
+    padding-bottom: 9vh;
+  }
+
+  .swiper-slide {
+    width: 250px;
+  }
+}
+
+@media (max-width:520px) {
+  .swiper {
+    padding-top: 12vh;
+    padding-bottom: 10vh;
+  }
+
+  .swiper-slide {
+    width: 200px;
+  }
+}
+
+.swiper-slide img {
+  display: block;
+  width: 100%;
+}

@@ -1,0 +1,24 @@
+.background {
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+        url("/images/nneon.svg");
+    /* background: linear-gradient(180deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url("/images/nneon-Copy.svg"); */
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    align-items: center;
+    background-position-x: center;
+    background-position-y: 250%;
+    animation: riseUpBackground 0.5s ease-out forwards;
+    animation-delay: 0.1s;
+}
+
+@keyframes riseUpBackground {
+    0% {
+        background-position-y: 100%;
+    }
+
+    100% {
+        background-position: center;
+    }
+}

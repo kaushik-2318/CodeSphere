@@ -1,0 +1,78 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+    font-family: Arvo;
+    src: url(/fonts/Arvo.ttf);
+}
+
+@font-face {
+    font-family: Catamaran;
+    src: url(/fonts/Catamaran.ttf);
+}
+
+@font-face {
+    font-family: Decomart;
+    src: url(/fonts/Decomart.otf);
+}
+
+@font-face {
+    font-family: Exo;
+    src: url(/fonts/Exo.ttf);
+}
+
+@font-face {
+    font-family: Geist;
+    src: url(/fonts/Geist.ttf);
+}
+
+@font-face {
+    font-family: GreatVibes;
+    src: url(/fonts/GreatVibes.ttf);
+}
+
+@font-face {
+    font-family: LexendMega;
+    src: url(/fonts/LexendMega.ttf);
+}
+
+@font-face {
+    font-family: Montserrat;
+    src: url(/fonts/Montserrat.ttf);
+}
+
+@font-face {
+    font-family: Roboto;
+    src: url(/fonts/Roboto.ttf);
+}
+
+@font-face {
+    font-family: Sora;
+    src: url(/fonts/Sora.ttf);
+}
+
+@font-face {
+    font-family: SpaceGrotesk;
+    src: url(/fonts/SpaceGrotesk.ttf);
+}
+
+@font-face {
+    font-family: Syne;
+    src: url(/fonts/Syne.ttf);
+}
+
+@font-face {
+    font-family: Varino;
+    src: url(/fonts/Varino.otf);
+}
+
+@font-face {
+    font-family: Vonique;
+    src: url(/fonts/Vonique.otf);
+}
+
+@font-face {
+    font-family: Yellowtail;
+    src: url(/fonts/Yellowtail.ttf);
+}

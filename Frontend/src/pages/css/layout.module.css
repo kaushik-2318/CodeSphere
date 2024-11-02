@@ -1,0 +1,24 @@
+.left {
+    background: linear-gradient(180deg, rgba(5, 7, 26, 0.7), rgba(5, 7, 26, 0.7)),
+        url("/login/image15.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    /* background-size: contain; */
+    /* background-position: center; */
+    /* background-attachment: fixed; */
+    /* align-items: center; */
+    /* background-position-x: center; */
+    /* background-position-y: 250%; */
+    /* animation: riseUpBackground 0.5s ease-out forwards; */
+}
+
+.left::before {
+    content: "";
+    position: absolute;
+    background-color: #05071a;
+    background: linear-gradient(180deg, rgba(5, 7, 26, 1), rgba(5, 7, 26, 1));
+    height: 100vh;
+    width: 17%;
+    right: 37%;
+    transform: skew(-20deg);
+}

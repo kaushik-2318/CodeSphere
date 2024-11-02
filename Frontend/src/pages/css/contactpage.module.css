@@ -1,0 +1,10 @@
+.background {
+    background: url("/images/bbblurry.svg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    /* background-attachment: fixed; */
+    /* align-items: center; */
+    /* background-position-x: center; */
+    /* background-position-y: 250%; */
+}
