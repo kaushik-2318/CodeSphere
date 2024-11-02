@@ -5,7 +5,7 @@ const getProfile = async function (req, res, next) {
         const user = await userModel.findById(req.user._id).populate({
             path: "templates",
             model: "template",
-            select: "posttitle image"
+            select: "title thumbnail"
         })
             .select("-password -contactnumber -email -_id -like -bookmark -date -updatedAt -createdAt")
 

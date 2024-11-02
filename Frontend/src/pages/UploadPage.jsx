@@ -31,6 +31,8 @@ function UploadPage() {
     const [imageFile, setImageFile] = useState(null);
     const [preview, setPreview] = useState(null);
 
+    const [hasErrors, setHasErrors] = useState(false);
+
     useEffect(() => {
         const typed = new Typed(el.current, {
             strings: ["Upload your Template..."],
@@ -45,44 +47,44 @@ function UploadPage() {
 
 
     const onSubmit = async (data) => {
-        console.log("Sending registration data:", data);
+        if (hasErrors) {
+            toast.error("Please fix errors in the code editor before submitting.");
+            return;
+        }
+
         setError("serverError", null);
 
-        try {
-            const formData = new FormData();
-            formData.append("posttitle", data.posttitle);
-            formData.append("livelink", data.livelink);
-            formData.append("githublink", data.githublink);
-            formData.append("framework", framework);
-            formData.append("style", style)
-            formData.append("language", language)
-            formData.append("frameworkCode", frameworkCode)
-            formData.append("styleCode", styleCode)
-            formData.append("languageCode", languageCode)
-            formData.append('image', imageFile);
-            formData.append('imageUrl', imageUrl);
-            // formData.append("hastag", data.hastag);
+        const formData = new FormData();
+        formData.append("posttitle", data.posttitle);
+        formData.append("livelink", data.livelink);
+        formData.append("githublink", data.githublink);
+        formData.append("framework", framework);
+        formData.append("style", style)
+        formData.append("language", language)
+        formData.append("frameworkCode", frameworkCode)
+        formData.append("styleCode", styleCode)
+        formData.append("languageCode", languageCode)
+        formData.append('image', imageFile);
+        formData.append('imageUrl', imageUrl);
 
-            let r = await fetch("http://localhost:3000/template/createtemplate", {
-                method: "POST",
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                },
-                body: formData,
+        await axios.post("http://localhost:3000/template/createtemplate", formData, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+        })
+            .then((res) => {
+                if (res.status === 201) {
+                    toast.success("Template Upload Done");
+                    navigate("/");
+                } else {
+                    throw new Error(res.data.message || "Template Upload failed");
+                }
+            })
+            .catch((error) => {
+                const errorMessage = error.response?.data?.message || error.message;
+                setError("serverError", { message: errorMessage });
+                toast.error(errorMessage);
             });
-
-            if (!r.ok) {
-                const errorRes = await r.json();
-                console.log(errorRes.message);
-                throw new Error(errorRes.message || "Template Upload failed");
-            }
-            toast.success("Template Upload Done");
-            navigate("/");
-
-        } catch (error) {
-            console.log(error);
-            setError("serverError", { message: error.message });
-        }
     };
 
     const handleImageChange = (e) => {
@@ -127,7 +129,7 @@ function UploadPage() {
                 </div>
 
                 <div className="w-full">
-                    {page === 1 && < UploadTemplateCode register={register} errors={errors} framework={framework} style={style} language={language} imageUrl={imageUrl} setLanguageCode={setLanguageCode} setStyleCode={setStyleCode} setFrameworkCode={setFrameworkCode} />}
+                    {page === 1 && < UploadTemplateCode framework={framework} style={style} language={language} setLanguageCode={setLanguageCode} setStyleCode={setStyleCode} setFrameworkCode={setFrameworkCode} setHasErrors={setHasErrors} />}
                 </div>
 
                 {

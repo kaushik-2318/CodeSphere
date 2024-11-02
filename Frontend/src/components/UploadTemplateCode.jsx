@@ -1,7 +1,7 @@
 import CodeEditor from './CodeEditor'
 import FileUpload from './FileInput'
 
-function UploadTemplateCode({ register, errors, framework, style, language, setLanguageCode, setStyleCode, setFrameworkCode }) {
+function UploadTemplateCode({ framework, style, language, setLanguageCode, setStyleCode, setFrameworkCode, setHasErrors }) {
 
   return (
     <>
@@ -9,14 +9,14 @@ function UploadTemplateCode({ register, errors, framework, style, language, setL
 
         <div>
           Write Your {framework} Code Here:-
-          <CodeEditor options={framework} register={register} errors={errors} setCode={setFrameworkCode} />
+          <CodeEditor options={framework} setCode={setFrameworkCode} setHasErrors={setHasErrors} />
         </div>
 
         {
           style !== '' ? (
             <div>
               Write Your {style} Code Here:-
-              <CodeEditor options={style} register={register} errors={errors} setCode={setStyleCode} />
+              <CodeEditor options={style} setCode={setStyleCode} setHasErrors={setHasErrors} />
             </div>
           ) : (
             null
@@ -27,7 +27,7 @@ function UploadTemplateCode({ register, errors, framework, style, language, setL
           language !== '' ? (
             <div>
               Write Your {language} Code Here:-
-              <CodeEditor options={language} register={register} errors={errors} setCode={setLanguageCode} />
+              <CodeEditor options={language} setCode={setLanguageCode} setHasErrors={setHasErrors} />
             </div>
           ) : (
             null

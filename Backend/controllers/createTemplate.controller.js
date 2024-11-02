@@ -40,8 +40,8 @@ const createTemplate = async (req, res) => {
         }
 
         const template = await templateModel.create({
-            posttitle,
-            image: imagePublicUrl,
+            title: posttitle,
+            thumbnail: imagePublicUrl,
             hastag,
             livelink,
             githublink,
@@ -55,7 +55,7 @@ const createTemplate = async (req, res) => {
         });
 
         await likeModel.create({ templateId: template._id });
-        
+
         await viewModel.create({
             userId: req.user._id,
             template: [{ templateId: template._id, views: [] }],

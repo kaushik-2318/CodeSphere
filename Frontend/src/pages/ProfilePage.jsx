@@ -19,14 +19,7 @@ import PropTypes from "prop-types";
 
 
 export default function ProfilePage() {
-    const [profile, setProfile] = useState({
-        name: "No name available",
-        username: "No username",
-        location: "Unknown location",
-        bio: "No bio available",
-        coverphoto: "",
-        profilepicture: "",
-    });
+    const [profile, setProfile] = useState({});
     const navigate = useNavigate();
     const [editMode, setEditMode] = useState(false);
     const { isOpen, setIsOpen } = useContext(Context);
@@ -59,20 +52,16 @@ export default function ProfilePage() {
                 },
             })
             .then((res) => {
-                console.log(res.data.user)
                 setIsOpen(false);
                 setProfile(res.data.user);
                 setTemplates(res.data.user.templates);
                 setTotalTemplates(res.data.user.templates.length);
             })
             .catch((err) => {
-                console.error(err);
                 if (err.response && err.response.status === 401) {
                     setIsOpen(true);
-                    toast("Unauthorized access. Please log in again.");
-                    console.error(err);
+                    toast.error("Unauthorized access. Please log in again.");
                 } else {
-                    console.error(err);
                     toast(err.message);
                     setIsOpen(true);
                 }
@@ -116,8 +105,6 @@ export default function ProfilePage() {
                 window.location.reload();
             })
             .catch((err) => {
-                console.error(err);
-
                 if (err.response && err.response.status === 400) {
                     toast.error(err.response.data.message || "Error updating profile");
                 }
@@ -152,7 +139,7 @@ export default function ProfilePage() {
                 window.location.reload();
             })
             .catch((error) => {
-                console.error("There was an error logging out:", error);
+                toast.error("There was an error logging out:", error);
             });
     };
 
@@ -539,7 +526,7 @@ export const Card = ({ template, profile }) => {
                         <div className="">
                             <img
                                 className="w-full rounded-2xl h-52"
-                                src={template.image}
+                                src={template.thumbnail}
                                 alt="image"
                             />
                         </div>
@@ -554,7 +541,7 @@ export const Card = ({ template, profile }) => {
                             </div>
                             <div className="flex flex-col justify-center items-start">
                                 <div className="font-['Montserrat'] text-zinc-100 tracking-wide">
-                                    {template.posttitle}
+                                    {template.title}
                                 </div>
                                 <div>
                                     @
@@ -578,18 +565,4 @@ export const Card = ({ template, profile }) => {
             </div>
         </>
     );
-};
-
-Card.propTypes = {
-    className: PropTypes.string,
-    template: PropTypes.shape({
-        _id: PropTypes.string.isRequired,
-        posttitle: PropTypes.string.isRequired,
-        image: PropTypes.string,
-        owner: PropTypes.shape({
-            username: PropTypes.string.isRequired,
-            profilepicture: PropTypes.string,
-        }).isRequired,
-        likeCount: PropTypes.number.isRequired,
-    }).isRequired,
 };
