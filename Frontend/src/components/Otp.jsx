@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react"
-import PropTypes from "prop-types";
 
 function Otp ({disable, onOtpSubmit}) {
 
@@ -66,11 +65,5 @@ function Otp ({disable, onOtpSubmit}) {
     </div>
   )
 }
-
-Otp.propTypes = {
-  disable: PropTypes.bool,
-  onOtpSubmit: PropTypes.func,
-};
-
 
 export default Otp

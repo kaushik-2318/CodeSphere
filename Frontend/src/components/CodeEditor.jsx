@@ -1,5 +1,5 @@
 import Editor from '@monaco-editor/react';
-import { useRef, useState,useEffect } from 'react';
+import { useRef, useState, useEffect } from 'react';
 
 function CodeEditor({ options, setCode, setHasErrors }) {
 
@@ -19,9 +19,7 @@ function CodeEditor({ options, setCode, setHasErrors }) {
     }
 
     const checkForErrors = () => {
-        const markers = editorRef.current
-            ? monaco.editor.getModelMarkers({ owner: editorRef.current.getModel().getLanguageId() })
-            : [];
+        const markers = editorRef.current ? monaco.editor.getModelMarkers({ owner: editorRef.current.getModel().getLanguageId() }) : [];
         const hasErrors = markers.some(marker => marker.severity === monaco.MarkerSeverity.Error);
         setHasErrors(hasErrors);
     };

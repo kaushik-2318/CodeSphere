@@ -11,13 +11,13 @@ import heart from "/icons/heart-line.svg";
 import heartFill from "/icons/heart-fill.svg";
 import more from "/icons/more-fill.svg";
 
-import { getAllTemplates, updateLike, addBookmark, increaseViews } from "../services/api.js";
+import { getAllTemplatesapi, updateLikeapi, addBookmarkapi, increaseViewsapi } from "../services/api.js";
 import { Link, useNavigate } from "react-router-dom";
 
 interface Template {
     _id: string;
-    image: string;
-    posttitle: string;
+    thumbnail: string;
+    title: string;
     owner: {
         profilepicture: string;
         username: string;
@@ -38,7 +38,7 @@ export const Hovereffect: React.FC<HoverEffectProps> = ({ className }) => {
     const [templates, setTemplates] = useState<Template[]>([]);
 
     const fetchTemplates = useCallback(() => {
-        getAllTemplates()
+        getAllTemplatesapi()
             .then((res) => setTemplates(res.data.allTemplates))
             .catch((err) => console.error(err));
     }, []);
@@ -47,7 +47,7 @@ export const Hovereffect: React.FC<HoverEffectProps> = ({ className }) => {
     const handleLikeUpdate = useCallback(
         async (templateId: string): Promise<any> => {
             try {
-                const res = await updateLike(templateId, localStorage.getItem("token") as string);
+                const res = await updateLikeapi(templateId, localStorage.getItem("token") as string);
                 fetchTemplates();
                 setIsOpen(false);
                 return res;
@@ -61,11 +61,12 @@ export const Hovereffect: React.FC<HoverEffectProps> = ({ className }) => {
         },
         [fetchTemplates, setIsOpen]
     );
+
     const handleBookmark = useCallback(
         async (templateId: string): Promise<any> => {
             try {
-                await addBookmark(templateId, localStorage.getItem("token") as string);
-                await fetchTemplates();
+                await addBookmarkapi(templateId, localStorage.getItem("token") as string);
+                fetchTemplates();
                 setIsOpen(false);
             } catch (err) {
                 console.error(err);
@@ -144,7 +145,7 @@ export const Card: React.FC<CardProps> = ({ className, template, updatelike, add
         if (!canCall) return;
 
         canCall = false;
-        increaseViews(template._id)
+        increaseViewsapi(template._id)
             .then((res) => {
                 console.log("View count increased:", res.data.totalViews);
             })
@@ -178,13 +179,22 @@ export const Card: React.FC<CardProps> = ({ className, template, updatelike, add
 
     const handleBookmarkClick = () => {
         setIsBookmark((prevBookmarked) => !prevBookmarked);
-        addBookMark(template._id)
-            .then((res) => setIsBookmark(res.data.isBookmarked))
+
+        addBookmarkapi(template._id, localStorage.getItem("token") as string)
+            .then((res) => {
+                if (res && res.data && typeof res.data.isBookmarked === "boolean") {
+                    setIsBookmark(res.data.isBookmarked);
+                } else {
+                    console.error("Unexpected response format for bookmark update:", res);
+                    setIsBookmark(template.userBookmarked);
+                }
+            })
             .catch((err) => {
-                console.log(err);
+                console.error("Error updating bookmark:", err);
                 setIsBookmark(template.userBookmarked);
             });
     };
+
 
     return (
         <div
@@ -203,7 +213,7 @@ export const Card: React.FC<CardProps> = ({ className, template, updatelike, add
                 <div>
                     <img
                         className="w-full rounded-2xl h-52"
-                        src={template.image}
+                        src={template.thumbnail}
                         alt="image"
                     />
                 </div>
@@ -218,7 +228,7 @@ export const Card: React.FC<CardProps> = ({ className, template, updatelike, add
                     </div>
                     <div className="flex flex-col justify-center items-start">
                         <div className="font-['Montserrat'] text-zinc-100 tracking-wide">
-                            {template.posttitle}
+                            {template.title}
                         </div>
                         <div>
                             @
@@ -248,8 +258,7 @@ export const Card: React.FC<CardProps> = ({ className, template, updatelike, add
                                 onClick={handleBookmarkClick}
                                 className="w-5 relative top-[1px]"
                                 src={isBookmark ? bookmarkFill : bookmark}
-                                alt="Bookmark"
-                            />
+                                alt="Bookmark" />
                         </div>
                     </div>
                 </div>

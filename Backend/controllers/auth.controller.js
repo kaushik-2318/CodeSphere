@@ -66,7 +66,7 @@ const loginUser = async function (req, res) {
 
     try {
         if (!email || !password) {
-            return res.status(400).json({ message: "All Field are required" });
+            return res.status(500).json({ message: "All Field are required" });
         }
 
         let user = await userModel.findOne({ email });

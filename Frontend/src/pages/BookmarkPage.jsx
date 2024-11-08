@@ -1,23 +1,17 @@
 import { useEffect, useState } from "react";
 import { Button } from "@nextui-org/button";
-import axios from "axios";
-import PropTypes from "prop-types";
 import iconBookmark from "/icons/bookmark-line.svg";
 import iconBookmarkFill from "/icons/bookmark-fill.svg";
 import iconLike from "/icons/heart-line.svg";
 import iconLikeFill from "/icons/heart-fill.svg";
 import more from "/icons/more-fill.svg";
+import { getBookmarkapi } from "../services/api";
 
 function BookmarkPage() {
-    
     const [bookmarks, setBookmarks] = useState([]);
 
-    const getUserBookmark = async () => {
-        axios.get(`http://localhost:3000/template/getUserBookmark`, {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-        })
+    const getBookmark = () => {
+        getBookmarkapi()
             .then((res) => {
                 setBookmarks(res.data.user.bookmark);
             })
@@ -25,7 +19,7 @@ function BookmarkPage() {
     };
 
     useEffect(() => {
-        getUserBookmark();
+        getBookmark();
     }, []);
 
     return (
@@ -69,8 +63,7 @@ const Card = ({ bookmark }) => {
                     </div>
 
                     <div>
-                        <img className="w-full rounded-2xl h-48" src={bookmark.image} alt="Thumbnail"
-                        />
+                        <img className="w-full rounded-2xl h-48" src={bookmark.thumbnail} alt="Thumbnail" />
                     </div>
 
                     <div className="flex flex-row items-center justify-start gap-4 mt-4">
@@ -79,7 +72,7 @@ const Card = ({ bookmark }) => {
                         </div>
                         <div className="flex flex-col justify-center items-start">
                             <div className="font-['Montserrat'] text-zinc-100 tracking-wide">
-                                {bookmark.posttitle}
+                                {bookmark.title}
                             </div>
                             <div>
                                 @
@@ -97,7 +90,6 @@ const Card = ({ bookmark }) => {
                         <div className="flex flex-row justify-center items-center gap-5">
                             <div className="flex items-center justify-center gap-2">
                                 <img className="w-5 relative top-[1px]" src={isLike ? iconLikeFill : iconLike} alt="Like Button" />
-                                13
                             </div>
                             <div className="flex items-center justify-center gap-2">
                                 <img className="w-5 relative top-[1px]" src={isBookmark ? iconBookmarkFill : iconBookmark} alt="Bookmark" />
@@ -108,15 +100,4 @@ const Card = ({ bookmark }) => {
             </div>
         </>
     );
-};
-
-Card.propTypes = {
-    bookmark: PropTypes.shape({
-        image: PropTypes.string.isRequired,
-        owner: PropTypes.shape({
-            profilepicture: PropTypes.string.isRequired,
-            username: PropTypes.string.isRequired,
-        }).isRequired,
-        posttitle: PropTypes.string.isRequired,
-    }).isRequired,
 };

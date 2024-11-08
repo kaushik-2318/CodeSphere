@@ -8,6 +8,8 @@ const emailotpSchema = mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "user",
+        require: true,
+        unique: true,
     },
 });
 

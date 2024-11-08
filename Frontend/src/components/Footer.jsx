@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { Link } from "react-router-dom";
 import logo from "/logo.png";
 
 export default function Footer() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const navigate = useNavigate();
 
     useEffect(() => {
         const token = localStorage.getItem("token");
@@ -15,28 +13,6 @@ export default function Footer() {
             setIsLoggedIn(false);
         }
     }, []);
-
-    const logout = () => {
-        axios
-            .post(
-                `http://localhost:3000/auth/logout`,
-                {},
-                {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem("token")}`,
-                    },
-                }
-            )
-            .then(() => {
-                localStorage.removeItem("token");
-                setIsLoggedIn(false);
-                navigate("/");
-                window.location.reload();
-            })
-            .catch((error) => {
-                console.error("There was an error logging out:", error);
-            });
-    };
 
     return (
         <>
@@ -146,11 +122,6 @@ export default function Footer() {
                                 </div>
                                 <div className="px-3 border-r-2 border-zinc-700">
                                     <Link to="/contact">Contact US</Link>
-                                </div>
-                                <div className="pl-3 text-red-500">
-                                    <Link onClick={logout} to="/">
-                                        Logout
-                                    </Link>
                                 </div>
                             </>
                         ) : (

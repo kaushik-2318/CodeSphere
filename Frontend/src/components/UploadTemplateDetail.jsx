@@ -4,13 +4,19 @@ import Loader from "../components/Loader";
 import { frameworks, styling, languages } from "../constant";
 import { useState } from "react";
 import { toast } from "react-toastify";
-import axios from 'axios'
+import axios from "axios";
 
-function UploadTemplateDetail({ register, errors, setFramework, setStyle, setLanguage, setImageUrl, imageUrl }) {
-
+function UploadTemplateDetail({
+    register,
+    errors,
+    setFramework,
+    setStyle,
+    setLanguage,
+    setImageUrl,
+    imageUrl,
+}) {
     const [title, setTitle] = useState("");
     const [loader, setLoader] = useState(false);
-
 
     const handleCharacter = (event) => {
         const inputValue = event.target.value;
@@ -23,34 +29,44 @@ function UploadTemplateDetail({ register, errors, setFramework, setStyle, setLan
 
         const url = e.target.value;
 
-        const urlPattern = /^(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6}(\/[^\s]*)?$/;
+        const urlPattern =
+            /^(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6}(\/[^\s]*)?$/;
         const isValidUrl = (url) => urlPattern.test(url);
 
         if (isValidUrl(url)) {
-            if (e.target.value !== '') {
+            if (e.target.value !== "") {
                 setLoader(true);
                 try {
-                    const { data } = await axios.get(`http://localhost:3000/template/screenshot?url=${url}`);
-                    setImageUrl('http://localhost:3000' + data.screenshotPath);
+                    const { data } = await axios.get(
+                        `https://codesphere-backend.vercel.app/template/screenshot?url=${url}`
+                    );
+                    setImageUrl(
+                        "https://codesphere-backend.vercel.app" + data.screenshotPath
+                    );
                     setLoader(false);
                 } catch (error) {
                     setLoader(false);
-                    if (error.response && error.response.status === 400 && error.response.data.message === 'Invalid URL') {
-                        toast.error("Invalid URL")
+                    if (
+                        error.response &&
+                        error.response.status === 400 &&
+                        error.response.data.message === "Invalid URL"
+                    ) {
+                        toast.error("Invalid URL");
                     } else {
                         console.log(error);
-                        toast.error('An unexpected error occurred while capturing the screenshot.');
+                        toast.error(
+                            "An unexpected error occurred while capturing the screenshot."
+                        );
                     }
                 }
             }
         } else {
-            console.log('Provided URL is not valid:', url);
+            console.log("Provided URL is not valid:", url);
         }
     };
     return (
         <>
             <div className="flex justify-center items-center flex-col w-[500px] border-2 border-[#27272a] rounded-2xl p-5 font-['Geist']">
-
                 <div className="flex w-full pt-2 justify-center items-start gap-2 flex-col">
                     <div className="flex justify-between flex-row w-full items-center">
                         <label className="text-lg text-justify text-[.875rem] font-medium" htmlFor="posttitle">
@@ -61,7 +77,11 @@ function UploadTemplateDetail({ register, errors, setFramework, setStyle, setLan
                         )}
                     </div>
                     <div className="w-full pl-4">
-                        <input {...register("posttitle", { required: "Title is required", minLength: { value: 3, message: "Maximum Length is 3" }, maxLength: { value: 70, message: "Maximum Length is 70" } })} placeholder="e.g. Responsive landing page using CSS Grid" className="w-full outline-none rounded-md font-['SpaceGrotesk'] bg-[#27272a] text-white px-3 py-3 text-sm tracking-wider" type="text" value={title} onChange={handleCharacter} />
+                        <input {...register("posttitle", {
+                            required: "Title is required",
+                            minLength: { value: 3, message: "Maximum Length is 3" },
+                            maxLength: { value: 70, message: "Maximum Length is 70" },
+                        })} placeholder="e.g. Responsive landing page using CSS Grid" className="w-full outline-none rounded-md font-['SpaceGrotesk'] bg-[#27272a] text-white px-3 py-3 text-sm tracking-wider" type="text" value={title} onChange={handleCharacter} />
                     </div>
                     <p className="text-right w-full text-sm">
                         Characters remaining: {70 - title.length}
@@ -70,7 +90,7 @@ function UploadTemplateDetail({ register, errors, setFramework, setStyle, setLan
 
                 <div className="flex w-full pt-5 pb-6  justify-center items-start gap-2 flex-col">
                     <div className="flex justify-between items-center w-full">
-                        <label className="text-lg text-justify text-[.875rem] font-medium" htmlFor="githubLink">
+                        <label className="text-lg text-justify text-[.875rem] font-medium" htmlFor="githubLink" >
                             Repository URL
                         </label>
                         {errors.githuburl && (
@@ -78,13 +98,15 @@ function UploadTemplateDetail({ register, errors, setFramework, setStyle, setLan
                         )}
                     </div>
                     <div className="pl-4 w-full">
-                        <input {...register("githuburl", { required: "Repository URL is required" })} placeholder="www.example.com" className="w-full outline-none rounded-md font-['SpaceGrotesk'] bg-[#27272a] text-white px-3 py-3 text-sm tracking-wider" type="text" />
+                        <input {...register("githuburl", {
+                            required: "Repository URL is required",
+                        })} placeholder="www.example.com" className="w-full outline-none rounded-md font-['SpaceGrotesk'] bg-[#27272a] text-white px-3 py-3 text-sm tracking-wider" type="text" />
                     </div>
                 </div>
 
                 <div className="flex w-full pb-6 justify-center items-start gap-2 flex-col">
                     <div className="flex justify-between items-center w-full">
-                        <label className="text-lg text-justify text-[.875rem] font-medium" htmlFor="liveLink">
+                        <label className="text-lg text-justify text-[.875rem] font-medium" htmlFor="liveLink"  >
                             Live site URL
                         </label>
                         {errors.livelink && (
@@ -92,16 +114,16 @@ function UploadTemplateDetail({ register, errors, setFramework, setStyle, setLan
                         )}
                     </div>
                     <div className="pl-4 w-full">
-                        <input onInput={handleScreenShot} {...register("livelink", { required: "Live site URL is required" })} placeholder="www.example.com" className="w-full outline-none rounded-md font-['SpaceGrotesk'] bg-[#27272a] text-white px-3 py-3 text-sm tracking-wider" type="text" />
+                        <input  onInput={handleScreenShot}
+                            {...register("livelink", {
+                                required: "Live site URL is required",
+                            })} placeholder="www.example.com" className="w-full outline-none rounded-md font-['SpaceGrotesk'] bg-[#27272a] text-white px-3 py-3 text-sm tracking-wider" type="text"/>
                     </div>
                 </div>
 
-
                 <div className="flex w-full justify-center items-start gap-2 flex-col">
                     <div className="flex justify-between items-center w-full gap-10">
-                        <label className="text-lg text-justify text-[.875rem] font-medium" htmlFor="hastag">
-                            Which tools, libraries, frameworks, or methodologies did you use for this project?
-                        </label>
+                        <label className="text-lg text-justify text-[.875rem] font-medium" htmlFor="hastag">                        </label>
                     </div>
                     <div className="pl-4 w-full grid grid-cols-3 gap-3">
                         <LanguageSelector set={setFramework} options={frameworks} register={register} errors={errors} />
@@ -122,16 +144,15 @@ function UploadTemplateDetail({ register, errors, setFramework, setStyle, setLan
                         <div>
                             {<img className="rounded-2xl" src={imageUrl} alt="Generated Image" />}
                         </div>
+                    ) : loader ? (
+                        <div className="w-full h-full">
+                            <Loader />
+                        </div>
                     ) : (
-                        loader ? (
-                            <div className="w-full h-full">
-                                <Loader />
-                            </div>
-                        ) : (
-                            <p className="p-3 rounded-lg border-dashed border-[1px] border-gray-500">Preview</p>
-                        )
+                        <p className="p-3 rounded-lg border-dashed border-[1px] border-gray-500">
+                            Preview
+                        </p>
                     )}
-
                 </div>
             </div>
         </>

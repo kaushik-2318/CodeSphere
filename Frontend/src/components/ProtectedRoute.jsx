@@ -1,4 +1,3 @@
-import PropTypes from "prop-types"; // Import PropTypes
 import { Navigate } from "react-router-dom";
 import { isAuthenticated } from "../lib/auth";
 
@@ -8,10 +7,6 @@ const ProtectedRoute = ({ children }) => {
     }
 
     return children;
-};
-
-ProtectedRoute.propTypes = {
-    children: PropTypes.node.isRequired,
 };
 
 export default ProtectedRoute;

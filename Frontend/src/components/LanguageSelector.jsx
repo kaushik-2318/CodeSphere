@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react"
-import PropTypes from 'prop-types';
 
 function LanguageSelector({ options, set }) {
 
@@ -57,10 +56,6 @@ function LanguageSelector({ options, set }) {
 
         </>
     )
-}
-
-LanguageSelector.propTypes = {
-    options: PropTypes.arrayOf(PropTypes.string).isRequired
 }
 
 export default LanguageSelector

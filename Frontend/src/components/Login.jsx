@@ -7,8 +7,9 @@ import Checkbox from "@mui/joy/Checkbox";
 import gsap from "gsap";
 import Mail from "/icons/mail-fill.svg";
 import Lock from "/icons/lock-fill.svg";
-
+import axios from "axios";
 import styles from "./css/layout.module.css";
+import { loginapi } from "../services/api";
 
 function Login() {
     const pathname = useLocation();
@@ -22,15 +23,7 @@ function Login() {
         });
     }, [pathname]);
 
-    const {
-        register,
-        handleSubmit,
-        setError,
-        clearErrors,
-        formState: { errors, isSubmitting },
-    } = useForm({
-        defaultValues: { rememberMe: true },
-    });
+    const { register, handleSubmit, setError, clearErrors, formState: { errors, isSubmitting } } = useForm({ defaultValues: { rememberMe: true } });
 
     const handleInputChange = () => {
         clearErrors();
@@ -38,29 +31,22 @@ function Login() {
 
     const onSubmit = async (data) => {
         try {
-            let r = await fetch("http://localhost:3000/auth/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                credentials: "include",
-                body: JSON.stringify(data),
-            });
+            loginapi(data)
+                .then((res) => {
+                    const responseData = res.data;
+                    localStorage.setItem("token", responseData.token);
+                    toast.success("Login Successfully");
+                    navigate("/");
+                    window.location.reload();
+                })
+                .catch((err) => {
+                    setError("serverError", { message: err.response.data.message });
+                })
+        } catch (err) {
+            setError("serverError", { message: err.message });
 
-            if (!r.ok) {
-                const errorRes = await r.json();
-                throw new Error(errorRes.message || "Login failed");
-            }
-
-            const responseData = await r.json();
-            localStorage.setItem("token", responseData.token);
-            toast.success("Login Successfully");
-            navigate("/");
-            window.location.reload();
-        } catch (error) {
-            setError("serverError", { message: error.message });
         }
-    };
+    }
 
     return (
         <div
@@ -80,10 +66,7 @@ function Login() {
                 </div>
                 <div>
                     <div className="flex flex-col pb-7">
-                        <label
-                            className="flex justify-between items-center"
-                            htmlFor="email"
-                        >
+                        <label className="flex justify-between items-center" htmlFor="email"  >
                             Your Email
                             {errors.email && (
                                 <div className="text-red-500">{errors.email.message}</div>
@@ -109,10 +92,7 @@ function Login() {
                     </div>
 
                     <div className="flex flex-col pb-7">
-                        <label
-                            className="flex justify-between items-center"
-                            htmlFor="password"
-                        >
+                        <label className="flex justify-between items-center" htmlFor="password">
                             Your Password
                             {errors.password && (
                                 <div className="text-red-500">{errors.password.message}</div>
@@ -122,12 +102,7 @@ function Login() {
                             <span className=" h-full w-[20%] flex justify-center items-center border-[1px] rounded-l-md border-[#ffffff20]">
                                 <img className="w-5" src={Lock} alt="Lock" />
                             </span>
-                            <input
-                                {...register("password", { required: "Password is required" })}
-                                className="p-2 bg-[#1f2a37] rounded-r-md w-full h-full border-[1px] border-[#ffffff20] hover:border-green-600 focus:border-green-600 outline-none duration-500"
-                                type="password"
-                                placeholder="Password"
-                            />
+                            <input {...register("password", { required: "Password is required" })} className="p-2 bg-[#1f2a37] rounded-r-md w-full h-full border-[1px] border-[#ffffff20] hover:border-green-600 focus:border-green-600 outline-none duration-500" type="password" placeholder="Password" />
                         </div>
                     </div>
                 </div>
@@ -143,11 +118,7 @@ function Login() {
                 </div>
 
                 <div className="text-center my-7">
-                    <Button
-                        disabled={isSubmitting}
-                        className="bg-[#0064d7] w-full rounded-lg h-full py-2 font-normal tracking-wider disabled:bg-[#0064d769] disabled:cursor-not-allowed"
-                        type="submit"
-                    >
+                    <Button disabled={isSubmitting} className="bg-[#0064d7] w-full rounded-lg h-full py-2 font-normal tracking-wider disabled:bg-[#0064d769] disabled:cursor-not-allowed" type="submit">
                         Log In
                     </Button>
                 </div>

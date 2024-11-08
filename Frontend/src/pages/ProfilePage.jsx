@@ -1,21 +1,21 @@
 import { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 import { Button } from "@nextui-org/button";
+import { Context } from "../context/ModelContext.jsx";
 import pin from "/icons/map-pin-fill.svg";
 import setting from "/icons/settings-fill.svg";
 import like from "/icons/heart-3-fill.svg";
 import bookmark from "/icons/bookmark-fill.svg";
 import more from "/icons/more-fill.svg";
 import pencil from "/icons/pencil-fill.svg";
-import { Context } from "../context/ModelContext.jsx";
 import Chart from "../components/Chart.jsx";
 import Modal from "../components/Model.jsx";
-import axios from "axios";
-import { toast } from "react-toastify";
+
 import styles from "./css/profilepage.module.css";
-import PropTypes from "prop-types";
+
+import { getLoginUserProfileapi, logoutapi, updateLoginUserProfileapi } from "../services/api.js";
 
 
 export default function ProfilePage() {
@@ -26,15 +26,8 @@ export default function ProfilePage() {
     const [bioLength, setBioLength] = useState(0);
     const [templates, setTemplates] = useState([]);
     const [totalTemplates, setTotalTemplates] = useState(0);
-    // const [previewCover, setPreviewCover] = useState()
-    // const [previewProfilePicture, setProfilePicture] = useState()
 
-    const {
-        register,
-        clearErrors,
-        handleSubmit,
-        formState: { isSubmitting },
-    } = useForm();
+    const { register, clearErrors, handleSubmit, formState: { isSubmitting } } = useForm();
 
     const getProfile = () => {
         const token = localStorage.getItem("token");
@@ -45,12 +38,7 @@ export default function ProfilePage() {
             return;
         }
 
-        axios
-            .get(`http://localhost:3000/profile/`, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                },
-            })
+        getLoginUserProfileapi()
             .then((res) => {
                 setIsOpen(false);
                 setProfile(res.data.user);
@@ -88,19 +76,11 @@ export default function ProfilePage() {
             formData.append("profilepicture", data.profilepicture[0]);
         }
 
-        axios
-            .put("http://localhost:3000/profile/update", formData, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    "Content-Type": "multipart/form-data",
-                },
-            })
+        updateLoginUserProfileapi(formData)
             .then((response) => {
                 setEditMode(false);
                 setProfile(response.data.user);
                 toast.success("Profile updated successfully");
-                // setPreviewCover(null);
-                // setProfilePicture(null);
                 getProfile();
                 window.location.reload();
             })
@@ -108,7 +88,6 @@ export default function ProfilePage() {
                 if (err.response && err.response.status === 400) {
                     toast.error(err.response.data.message || "Error updating profile");
                 }
-
                 if (err.response && err.response.status === 401) {
                     setIsOpen(true);
                     toast.error("Unauthorized access. Please log in again.");
@@ -123,16 +102,7 @@ export default function ProfilePage() {
     };
 
     const logout = () => {
-        axios
-            .post(
-                `http://localhost:3000/auth/logout`,
-                {},
-                {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem("token")}`,
-                    },
-                }
-            )
+        logoutapi()
             .then(() => {
                 localStorage.removeItem("token");
                 navigate("/");
@@ -180,41 +150,23 @@ export default function ProfilePage() {
     return (
         <>
             {isOpen && <Modal open={isOpen} />}
-            <form
-                onSubmit={handleSubmit(handleProfileUpdate, handleProfileUpdateErrors)}
-                onChange={handleInputChange}
-            >
+            <form onSubmit={handleSubmit(handleProfileUpdate, handleProfileUpdateErrors)} onChange={handleInputChange}>
                 <div className="bg-[#1d2734] mb-[300px] flex min-h-screen">
                     <div className="bg-[#19212d] w-[300px]">
-                        <div
-                            className={`pb-4 gap-4 flex justify-center items-center flex-col pt-[100px] ${styles.backgroundleft} text-white text-center`}
-                        >
+                        <div className={`pb-4 gap-4 flex justify-center items-center flex-col pt-[100px] ${styles.backgroundleft} text-white text-center`}>
                             <div>
-                                <img
-                                    className="rounded-full w-[60px] h-[60px] border-[1px] object-cover"
-                                    src={profile?.profilepicture}
-                                    alt="Profile"
-                                />
+                                <img className="rounded-full w-[60px] h-[60px] border-[1px] object-cover" src={profile?.profilepicture} alt="Profile" />
                             </div>
                             <div>
                                 {editMode ? (
-                                    <input
-                                        {...register("name", { required: true })}
-                                        defaultValue={profile.name}
-                                        className="bg-transparent border-[1px] rounded-md border-gray-500 px-2 py-1 outline-none w-28 text-center"
-                                        placeholder={profile.name || "No name available"}
-                                        type="text"
-                                    />
+                                    <input {...register("name", { required: true })} defaultValue={profile.name} className="bg-transparent border-[1px] rounded-md border-gray-500 px-2 py-1 outline-none w-28 text-center" placeholder={profile.name || "No name available"} type="text" />
                                 ) : (
                                     <div className="py-1 outline-none w-28 text-center">
                                         {profile && profile.name}
                                     </div>
                                 )}
                             </div>
-                            <button
-                                onClick={handleCancel}
-                                className="border-[1px] px-2 w-24 py-1 rounded-xl shadow-2xl backdrop-blur-md"
-                            >
+                            <button onClick={handleCancel} className="border-[1px] px-2 w-24 py-1 rounded-xl shadow-2xl backdrop-blur-md">
                                 {editMode ? "Cancel" : "Edit Profile"}
                             </button>
                         </div>
@@ -235,21 +187,14 @@ export default function ProfilePage() {
                                     <img width={20} src={like} alt="" />
                                     Likes
                                 </li>
-                                <li
-                                    onClick={logout}
-                                    className="flex cursor-pointer gap-3 justify-start items-center mx-8 pl-1 py-5 duration-300 border-2 border-transparent hover:border-b-gray-700 hover:text-red-500 group/hover"
-                                >
+                                <l onClick={logout} className="flex cursor-pointer gap-3 justify-start items-center mx-8 pl-1 py-5 duration-300 border-2 border-transparent hover:border-b-gray-700 hover:text-red-500 group/hover"   >
                                     <div className="w-[20px]">
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 24 24"
-                                            className={`fill-white group-hover/hover:fill-red-500 duration-300`}
-                                        >
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className={`fill-white group-hover/hover:fill-red-500 duration-300`}   >
                                             <path d="M5 2H19C19.5523 2 20 2.44772 20 3V21C20 21.5523 19.5523 22 19 22H5C4.44772 22 4 21.5523 4 21V3C4 2.44772 4.44772 2 5 2ZM9 11V8L4 12L9 16V13H15V11H9Z"></path>
                                         </svg>
                                     </div>
                                     Sign Out
-                                </li>
+                                </l>
                             </ul>
                         </div>
                     </div>
@@ -294,34 +239,16 @@ export default function ProfilePage() {
                                 )}
                             </div>
                             <div className="flex">
-                                <div
-                                    className="h-[100px] w-[100px] flex justify-center items-center border-white"
-                                    style={editMode ? { display: "none" } : { display: "block" }}
-                                >
-                                    <img
-                                        className="rounded-full h-[90px] w-[90px] object-cover"
-                                        src={profile?.profilepicture}
-                                        alt="Profile"
-                                    />
+                                <div className="h-[100px] w-[100px] flex justify-center items-center border-white" style={editMode ? { display: "none" } : { display: "block" }}>
+                                    <img className="rounded-full h-[90px] w-[90px] object-cover" src={profile?.profilepicture} alt="Profile" />
                                 </div>
 
                                 {editMode && (
                                     <>
-                                        <label
-                                            className="h-[100px] w-[100px] border-white cursor-pointer relative"
-                                            htmlFor="profilepicture"
-                                        >
-                                            <img
-                                                className="rounded-full h-[90px] w-[90px] border-2 object-cover"
-                                                src={profile.profilepicture}
-                                                alt="Profile Picture"
-                                            />
+                                        <label className="h-[100px] w-[100px] border-white cursor-pointer relative" htmlFor="profilepicture"        >
+                                            <img className="rounded-full h-[90px] w-[90px] border-2 object-cover" src={profile.profilepicture} alt="Profile Picture" />
                                             <div className="w-[20px] h-[20px] bg-blue-500 absolute right-2 bottom-2 rounded-md flex justify-center items-center">
-                                                <img
-                                                    className="w-[15px] h-[15px]"
-                                                    src={pencil}
-                                                    alt="Edit Icon"
-                                                />
+                                                <img className="w-[15px] h-[15px]" src={pencil} alt="Edit Icon" />
                                             </div>
                                         </label>
                                         {/* <input hidden {...register("profilepicture")} onChange={(e) => setProfilePicture(URL.createObjectURL(e.target.files[0]))} type="file" id='profilepicture' accept="image/*" /> */}
@@ -339,8 +266,7 @@ export default function ProfilePage() {
                                         <div className="text-2xl tracking-wide text-[#f04f58] font-bold">
                                             {editMode ? (
                                                 <div>
-                                                    <input
-                                                        defaultValue={profile.username}
+                                                    <input defaultValue={profile.username}
                                                         {...register("username", {
                                                             required: "Username is required",
                                                             minLength: {
@@ -356,40 +282,18 @@ export default function ProfilePage() {
                                                                 message:
                                                                     "Username can only contain letters, numbers, and underscores",
                                                             },
-                                                        })}
-                                                        className="bg-transparent border-[1px] rounded-md border-gray-500 px-2 py-1 outline-none mb-3"
-                                                        placeholder={profile.username}
-                                                        type="text"
-                                                    />
+                                                        })} className="bg-transparent border-[1px] rounded-md border-gray-500 px-2 py-1 outline-none mb-3" placeholder={profile.username} type="text" />
                                                 </div>
                                             ) : (
-                                                <div
-                                                    className="px-2 py-1"
-                                                    style={
-                                                        editMode
-                                                            ? { border: "1px solid #27272a" }
-                                                            : { border: "1px solid transparent" }
-                                                    }
-                                                >
+                                                <div className="px-2 py-1" style={editMode ? { border: "1px solid #27272a" } : { border: "1px solid transparent" }}      >
                                                     {profile && <div>{profile.username}</div>}
                                                 </div>
                                             )}
                                         </div>
                                         <div className="text-sm tracking-wide flex justify-start gap-1 items-center text-white font-light mb-2 ">
-                                            <img
-                                                className=""
-                                                width={12}
-                                                src={pin}
-                                                alt="Location Icon"
-                                            />
+                                            <img width={12} src={pin} alt="Location Icon" />
                                             {editMode ? (
-                                                <input
-                                                    defaultValue={profile.location}
-                                                    {...register("location")}
-                                                    className="bg-transparent border-[1px] rounded-md border-gray-500 px-2 py-1 outline-none"
-                                                    placeholder={profile.location}
-                                                    type="text"
-                                                />
+                                                <input defaultValue={profile.location} {...register("location")} className="bg-transparent border-[1px] rounded-md border-gray-500 px-2 py-1 outline-none" placeholder={profile.location} type="text" />
                                             ) : (
                                                 <div className="px-2 w-full h-full py-1 border-[1px] border-transparent">
                                                     {profile && (
@@ -405,25 +309,10 @@ export default function ProfilePage() {
                                             <div className="text-sm text-white font-light text-justify min-w-[35rem] max-w-[38rem] h-[70px]">
                                                 {editMode ? (
                                                     <div className="h-full w-full">
-                                                        <textarea
-                                                            defaultValue={profile.bio}
-                                                            {...register("bio")}
-                                                            maxLength={340}
-                                                            onChange={handleBioChange}
-                                                            className="bg-transparent border-[1px] rounded-md border-gray-500 px-2 py-1 outline-none h-full w-full"
-                                                            placeholder={profile.bio}
-                                                            type="text"
-                                                        />
+                                                        <textarea defaultValue={profile.bio} {...register("bio")} maxLength={340} onChange={handleBioChange} className="bg-transparent border-[1px] rounded-md border-gray-500 px-2 py-1 outline-none h-full w-full" placeholder={profile.bio} type="text" />
                                                     </div>
                                                 ) : (
-                                                    <div
-                                                        className="px-2 py-1 mb-3 h-full w-full"
-                                                        style={
-                                                            editMode
-                                                                ? { border: "1px solid #27272a" }
-                                                                : { border: "1px solid transparent" }
-                                                        }
-                                                    >
+                                                    <div className="px-2 py-1 mb-3 h-full w-full" style={editMode ? { border: "1px solid #27272a" } : { border: "1px solid transparent" }}   >
                                                         {profile && <div>{profile.bio}</div>}
                                                     </div>
                                                 )}
@@ -443,11 +332,7 @@ export default function ProfilePage() {
                                             Total Number of Posts
                                         </div>
                                         {editMode && (
-                                            <Button
-                                                disabled={isSubmitting}
-                                                type="submit"
-                                                className="text-white rounded-md border-[1px] mt-3 hover:bg-blue-500 hover:border-blue-500 duration-200 disabled:bg-blue-100"
-                                            >
+                                            <Button disabled={isSubmitting} type="submit" className="text-white rounded-md border-[1px] mt-3 hover:bg-blue-500 hover:border-blue-500 duration-200 disabled:bg-blue-100">
                                                 Update Profile
                                             </Button>
                                         )}
@@ -506,7 +391,7 @@ export const Card = ({ template, profile }) => {
         <>
             <div className="rounded-2xl h-full overflow-hidden border border-transparent dark:border-white/[0.2] group-hover:border-slate-700 relative p-4 w-[23rem] flex flex-col gap-5 text-white font-['Catamaran'] z-50 bg-[#11192833] backdrop-blur-[27px] backdrop-saturate-[57%]">
                 <div className="relative z-50">
-                    <div className="">
+                    <div >
                         <div className="absolute right-6 top-4">
                             <button onClick={handleClick}>
                                 <img className="w-7" src={more} alt="" />
@@ -515,29 +400,19 @@ export const Card = ({ template, profile }) => {
 
                         {model && (
                             <>
-                                <div
-                                    className={`absolute z-[1000] top-12 ${styles.dropdownbox} right-2 rounded-md font-['Exo'] text-red-500 border-2 border-[#ffffff20] bg-[#11192869] p-2 backdrop-blur-md cursor-pointer`}
-                                >
+                                <div className={`absolute z-[1000] top-12 ${styles.dropdownbox} right-2 rounded-md font-['Exo'] text-red-500 border-2 border-[#ffffff20] bg-[#11192869] p-2 backdrop-blur-md cursor-pointer`}>
                                     Delete Template
                                 </div>
                             </>
                         )}
 
-                        <div className="">
-                            <img
-                                className="w-full rounded-2xl h-52"
-                                src={template.thumbnail}
-                                alt="image"
-                            />
+                        <div >
+                            <img className="w-full rounded-2xl h-52" src={template.thumbnail} alt="image" />
                         </div>
 
                         <div className="flex flex-row items-center justify-start gap-4 mt-4">
                             <div className="w-10 h-10 rounded-full">
-                                <img
-                                    className="w-10 h-10 rounded-full"
-                                    src={profile.profilepicture}
-                                    alt="Profile Picture"
-                                />
+                                <img className="w-10 h-10 rounded-full" src={profile.profilepicture} alt="Profile Picture" />
                             </div>
                             <div className="flex flex-col justify-center items-start">
                                 <div className="font-['Montserrat'] text-zinc-100 tracking-wide">

@@ -4,7 +4,6 @@ import { useContext } from "react";
 import { Context } from "../context/ModelContext";
 import { Button } from "@nextui-org/button";
 import { toast } from "react-toastify";
-import PropTypes from "prop-types";
 import Checkbox from "@mui/joy/Checkbox";
 import Mail from "/icons/mail-fill.svg";
 import Lock from "/icons/lock-fill.svg";
@@ -14,13 +13,7 @@ function Model({ open }) {
     const { setIsOpen } = useContext(Context);
     const navigate = useNavigate();
 
-    const {
-        register,
-        handleSubmit,
-        setError,
-        clearErrors,
-        formState: { errors, isSubmitting },
-    } = useForm({ defaultValues: { rememberMe: true } });
+    const { register, handleSubmit, setError, clearErrors, formState: { errors, isSubmitting } } = useForm({ defaultValues: { rememberMe: true } });
 
     const handleInputChange = () => {
         clearErrors();
@@ -29,7 +22,7 @@ function Model({ open }) {
     const onSubmit = async (data) => {
         setError("serverError", null);
         try {
-            let r = await fetch("http://localhost:3000/auth/login", {
+            let r = await fetch("https://codesphere-backend.vercel.app/auth/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -177,9 +170,5 @@ function Model({ open }) {
         </>
     );
 }
-
-Model.propTypes = {
-    open: PropTypes.bool.isRequired,
-};
 
 export default Model;

@@ -3,13 +3,12 @@ import { useState } from "react";
 import { useGSAP } from "@gsap/react";
 import { useForm } from "react-hook-form";
 import { Button } from "@nextui-org/button";
-// import { toast } from "react-toastify";
 import Mail from "/icons/mail-fill.svg";
 import Lock from "/icons/lock-fill.svg";
 import Name from "/icons/user-fill.svg";
 import gsap from "gsap";
-
 import styles from "./css/layout.module.css";
+import { signupapi } from "../services/api";
 
 function Signin() {
     const [stage, setStage] = useState(1);
@@ -25,13 +24,7 @@ function Signin() {
         });
     }, [pathname]);
 
-    const {
-        register,
-        handleSubmit,
-        setError,
-        clearErrors,
-        formState: { errors, isSubmitting },
-    } = useForm();
+    const { register, handleSubmit, setError, clearErrors, formState: { errors, isSubmitting } } = useForm();
 
     const handleInputChange = () => {
         clearErrors();
@@ -47,31 +40,18 @@ function Signin() {
         };
 
         try {
-            let r = await fetch(
-                "http://localhost:3000/auth/register",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    credentials: "include",
-                    body: JSON.stringify(requestBody),
-                }
-            );
+            signupapi(requestBody)
+                .then(async (res) => {
+                    const responseData = await res.data;
+                    localStorage.setItem("token", responseData.token);
+                    navigate("/verification");
+                })
+                .catch((err) => {
+                    setError("serverError", { message: err.response.data.message } || "Registration failed");
+                })
 
-            if (!r.ok) {
-                const errorRes = await r.json();
-                throw new Error(errorRes.message || "Registration failed");
-            }
-
-            const responseData = await r.json();
-            localStorage.setItem("token", responseData.token);
-            navigate("/verification");
-        } catch (error) {
-            setError("serverError", { message: error.message });
-            console.log(error.message);
-            window.location.reload(); 
-            navigate("/signup");
+        } catch (err) {
+            setError("serverError", { message: err.message });
         }
     };
 
@@ -80,13 +60,8 @@ function Signin() {
     };
 
     return (
-        <div
-            className={`${styles.card} text-white font-['Geist'] p-10 w-[460px] mt-10 slideright`}
-        >
-            <form
-                onSubmit={handleSubmit(stage === 1 ? handleStageOneSubmit : onSubmit)}
-                onChange={handleInputChange}
-            >
+        <div className={`${styles.card} text-white font-['Geist'] p-10 w-[460px] mt-10 slideright`} >
+            <form onSubmit={handleSubmit(stage === 1 ? handleStageOneSubmit : onSubmit)} onChange={handleInputChange}>
                 <div>
                     <div className="mb-2 text-3xl">Sign Up to our platform</div>
                     <div className="text-md">Create a new Account</div>
@@ -111,12 +86,7 @@ function Signin() {
                                 <span className="h-full w-[20%] flex justify-center items-center border-[1px] border-[#ffffff20] rounded-l-md">
                                     <img className="w-5" src={Name} alt="Name" />
                                 </span>
-                                <input
-                                    {...register("name", { required: "Name is required" })}
-                                    className="p-2 bg-[#1f2a37] rounded-r-md w-full h-full border-[1px] border-[#ffffff20] hover:border-blue-600 focus:border-blue-600 outline-none duration-500"
-                                    type="text"
-                                    placeholder="Name"
-                                />
+                                <input {...register("name", { required: "Name is required" })} className="p-2 bg-[#1f2a37] rounded-r-md w-full h-full border-[1px] border-[#ffffff20] hover:border-blue-600 focus:border-blue-600 outline-none duration-500" type="text" placeholder="Name" />
                             </div>
                         </div>
 
@@ -138,11 +108,7 @@ function Signin() {
                                             value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
                                             message: "Please enter a valid email",
                                         },
-                                    })}
-                                    className="p-2 bg-[#1f2a37] rounded-r-md w-full h-full border-[1px] border-[#ffffff20] hover:border-blue-600 focus:border-blue-600 outline-none duration-500"
-                                    type="text"
-                                    placeholder="example@company.com"
-                                />
+                                    })} className="p-2 bg-[#1f2a37] rounded-r-md w-full h-full border-[1px] border-[#ffffff20] hover:border-blue-600 focus:border-blue-600 outline-none duration-500" type="text" placeholder="example@company.com" />
                             </div>
                         </div>
 
@@ -162,20 +128,12 @@ function Signin() {
                                         required: "Password is required",
                                         minLength: { value: 8, message: "Minimum Length is 8" },
                                         maxLength: { value: 12, message: "Maximum Length is 12" },
-                                    })}
-                                    className="p-2 bg-[#1f2a37] rounded-r-md w-full h-full border-[1px] border-[#ffffff20] hover:border-blue-600 focus:border-blue-600 outline-none duration-500"
-                                    type="password"
-                                    placeholder="Password"
-                                />
+                                    })} className="p-2 bg-[#1f2a37] rounded-r-md w-full h-full border-[1px] border-[#ffffff20] hover:border-blue-600 focus:border-blue-600 outline-none duration-500" type="password" placeholder="Password" />
                             </div>
                         </div>
 
                         <div className="my-3 text-center">
-                            <Button
-                                disabled={isSubmitting}
-                                type="submit"
-                                className="bg-[#0064d7] w-full rounded-lg h-full py-2 font-normal tracking-wider disabled:bg-[#0064d769] disabled:cursor-not-allowed"
-                            >
+                            <Button disabled={isSubmitting} type="submit" className="bg-[#0064d7] w-full rounded-lg h-full py-2 font-normal tracking-wider disabled:bg-[#0064d769] disabled:cursor-not-allowed">
                                 Continue...
                             </Button>
                         </div>
@@ -207,11 +165,7 @@ function Signin() {
                                             message:
                                                 "Username can only contain letters, numbers, and underscores",
                                         },
-                                    })}
-                                    className="p-2 bg-[#1f2a37] rounded-r-md w-full h-full border-[1px] border-[#ffffff20] hover:border-blue-600 focus:border-blue-600 outline-none duration-500"
-                                    type="text"
-                                    placeholder="Username"
-                                />
+                                    })} className="p-2 bg-[#1f2a37] rounded-r-md w-full h-full border-[1px] border-[#ffffff20] hover:border-blue-600 focus:border-blue-600 outline-none duration-500" type="text" placeholder="Username" />
                             </div>
                         </div>
 
@@ -228,27 +182,18 @@ function Signin() {
                                 <span className="h-full w-[20%] flex justify-center items-center border-[1px] rounded-l-md border-[#ffffff20]">
                                     <img className="w-5" src={Lock} alt="Lock" />
                                 </span>
-                                <input
-                                    {...register("contactnumber", {
-                                        required: "Contact Number is required",
-                                        pattern: {
-                                            value: /^[0-9]{10}$/,
-                                            message: "Please enter a valid 10-digit phone number",
-                                        },
-                                    })}
-                                    className="p-2 bg-[#1f2a37] rounded-r-md w-full h-full border-[1px] border-[#ffffff20] hover:border-blue-600 focus:border-blue-600 outline-none duration-500"
-                                    type="text"
-                                    placeholder="Contact Number"
-                                />
+                                <input {...register("contactnumber", {
+                                    required: "Contact Number is required",
+                                    pattern: {
+                                        value: /^[0-9]{10}$/,
+                                        message: "Please enter a valid 10-digit phone number",
+                                    },
+                                })} className="p-2 bg-[#1f2a37] rounded-r-md w-full h-full border-[1px] border-[#ffffff20] hover:border-blue-600 focus:border-blue-600 outline-none duration-500" type="text" placeholder="Contact Number" />
                             </div>
                         </div>
 
                         <div className="my-3 text-center">
-                            <Button
-                                disable={isSubmitting}
-                                type="submit"
-                                className="bg-[#0064d7] w-full rounded-lg h-full py-2 font-normal tracking-wider disabled:bg-[#0064d769] disabled:cursor-not-allowed"
-                            >
+                            <Button disable={isSubmitting} type="submit" className="bg-[#0064d7] w-full rounded-lg h-full py-2 font-normal tracking-wider disabled:bg-[#0064d769] disabled:cursor-not-allowed">
                                 Sign Up
                             </Button>
                         </div>

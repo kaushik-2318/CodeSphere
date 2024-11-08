@@ -1,45 +1,36 @@
-import CodeEditor from './CodeEditor'
-import FileUpload from './FileInput'
+import CodeEditor from "./CodeEditor";
+import FileUpload from "./FileInput";
 
-function UploadTemplateCode({ framework, style, language, setLanguageCode, setStyleCode, setFrameworkCode, setHasErrors }) {
-
+function UploadTemplateCode({ framework, style, language, setLanguageCode, setStyleCode, setFrameworkCode, setHasErrorsFramework, setHasErrorLanguage, setHasErrorsStyle }) {
   return (
     <>
-      <div className='w-full grid grid-cols-2 gap-10'>
-
+      <div className="w-full grid grid-cols-2 gap-10">
         <div>
           Write Your {framework} Code Here:-
-          <CodeEditor options={framework} setCode={setFrameworkCode} setHasErrors={setHasErrors} />
+          <CodeEditor options={framework} setCode={setFrameworkCode} setHasErrors={setHasErrorsFramework} />
         </div>
 
-        {
-          style !== '' ? (
-            <div>
-              Write Your {style} Code Here:-
-              <CodeEditor options={style} setCode={setStyleCode} setHasErrors={setHasErrors} />
-            </div>
-          ) : (
-            null
-          )
-        }
+        {style !== "" ? (
+          <div>
+            Write Your {style} Code Here:-
+            <CodeEditor options={style} setCode={setStyleCode} setHasErrors={setHasErrorsStyle} />
+          </div>
+        ) : null}
 
-        {
-          language !== '' ? (
-            <div>
-              Write Your {language} Code Here:-
-              <CodeEditor options={language} setCode={setLanguageCode} setHasErrors={setHasErrors} />
-            </div>
-          ) : (
-            null
-          )
-        }
+        {language !== "" ? (
+          <div>
+            Write Your {language} Code Here:-
+            <CodeEditor options={language} setCode={setLanguageCode} setHasErrors={setHasErrorLanguage} />
+          </div>
+        ) : null}
 
-        <div className='w-full mt-5'>
+        {/* TODO File Upload Component */}
+        <div className="w-full mt-5">
           <FileUpload />
         </div>
       </div>
     </>
-  )
+  );
 }
 
-export default UploadTemplateCode
+export default UploadTemplateCode;

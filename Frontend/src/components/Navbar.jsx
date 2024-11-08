@@ -7,6 +7,8 @@ import gsap from "gsap";
 import Search from "/icons/search.svg";
 import axios from "axios";
 
+import { logoutapi } from "../services/api";
+
 import styles from "./css/navbar.module.css";
 
 gsap.registerPlugin(useGSAP);
@@ -23,24 +25,20 @@ function NavBar() {
 }
 
 function DesktopNav() {
+
+  const navigate = useNavigate();
+
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [search, setSearch] = useState(false);
   const [panel, setPanel] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const navigate = useNavigate();
+  const [searchResults, setSearchResults] = useState({ users: [], templates: [] });
+  const [searchTerm, setSearchTerm] = useState("");
+
 
   const logout = () => {
-    axios
-      .post(
-        `http://localhost:3000/auth/logout`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      )
+    logoutapi()
       .then(() => {
         localStorage.removeItem("token");
         setIsLoggedIn(false);
@@ -55,6 +53,7 @@ function DesktopNav() {
   };
 
   const { pathname } = useLocation();
+
   useEffect(() => {
     setPanel(false);
   }, [pathname]);
@@ -147,48 +146,35 @@ function DesktopNav() {
     }
   }, []);
 
+
+  const handleSearch = async (event) => {
+    const query = event.target.value;
+    setSearchTerm(query);
+
+    if (query.length > 0) {
+      try {
+        const response = await axios.get(`https://codesphere-backend.vercel.app/search/`, {
+          params: { q: query },
+        });
+        setSearchResults(response.data);
+        console.log(response.data);
+
+      } catch (error) {
+        console.error("Search error:", error);
+      }
+    } else {
+      setSearchResults({ users: [], templates: [] });
+    }
+  };
+
   return (
     <>
-      <ul
-        className={`${styles.nav} flex justify-center items-center gap-20 list-none rounded-[12px] px-10 h-16 min-w-[450px] fixed text-white right-1/2 left-1/2 -translate-x-1/2 z-[9999] top-5`}
-        style={
-          scroll
-            ? {
-              backdropFilter: "blur(10px)",
-              borderRadius: "12px",
-              border: "1px solid #ffffff20",
-            }
-            : {}
-        }
-        onMouseEnter={(e) =>
-          scroll
-            ? (e.currentTarget.style.boxShadow = "")
-            : (e.currentTarget.style.boxShadow = "none")
-        }
-        onMouseLeave={(e) => (e.currentTarget.style.boxShadow = "none")}
-      >
+      <ul className={`${styles.nav} flex justify-center items-center gap-20 list-none rounded-[12px] px-10 h-16 min-w-[450px] fixed text-white right-1/2 left-1/2 -translate-x-1/2 z-[9999] top-5`} style={scroll ? { backdropFilter: "blur(10px)", borderRadius: "12px", border: "1px solid #ffffff20", } : {}} onMouseEnter={(e) => scroll ? (e.currentTarget.style.boxShadow = "") : (e.currentTarget.style.boxShadow = "none")} onMouseLeave={(e) => (e.currentTarget.style.boxShadow = "none")}>
         {["Home", "Search", isLoggedIn ? "Upload" : "Sign In"].map(
           (item, index) => (
-            <li
-              key={index}
-              className={`cursor-pointer navbaranimatiom ${hoveredIndex === index ? styles.hovered : ""
-                } ${hoveredIndex !== null && hoveredIndex !== index
-                  ? styles["other-hovered"]
-                  : ""
-                }`}
-              onMouseOver={() => handleMouseOver(index)}
-              onMouseOut={handleMouseOut}
-            >
+            <li key={index} className={`cursor-pointer navbaranimatiom ${hoveredIndex === index ? styles.hovered : ""} ${hoveredIndex !== null && hoveredIndex !== index ? styles["other-hovered"] : ""}`} onMouseOver={() => handleMouseOver(index)} onMouseOut={handleMouseOut}>
               {item === "Home" || item === "Sign In" || item === "Upload" ? (
-                <Link
-                  to={
-                    item === "Home"
-                      ? "/"
-                      : item === "Sign In"
-                        ? "/signin"
-                        : "/upload"
-                  }
-                >
+                <Link to={item === "Home" ? "/" : item === "Sign In" ? "/signin" : "/upload"} >
                   {item}
                 </Link>
               ) : (
@@ -221,10 +207,7 @@ function DesktopNav() {
               <li className="p-1 pl-3 duration-300 border-2 border-transparent cursor-pointer hover:border-b-gray-700 ">
                 FeedBack
               </li>
-              <li
-                onClick={logout}
-                className="p-1 pl-3 text-red-500 duration-300 border-2 border-transparent cursor-pointer hover:border-b-gray-700"
-              >
+              <li onClick={logout} className="p-1 pl-3 text-red-500 duration-300 border-2 border-transparent cursor-pointer hover:border-b-gray-700">
                 Logout
               </li>
             </ul>
@@ -232,32 +215,52 @@ function DesktopNav() {
         </>
       ) : null}
 
-      {search && pathname == "/" ? (
+
+
+
+      {search &&
         <div className="fixed z-40 flex items-center justify-center w-full h-screen overflow-hidden duration-500 backdrop-blur-lg">
-          <label
-            htmlFor="default-search"
-            className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
-          >
+          <label htmlFor="search" className="mb-2 text-sm font-medium text-gray-900 sr-only">
             Search
           </label>
           <div className="relative">
             <div className="absolute inset-y-0 flex items-center pointer-events-none start-0 ps-3">
               <img className="w-5" src={Search} alt="Search Icon" />
             </div>
-            <input
-              type="search"
-              id="search"
-              className="block w-[600px] p-4 ps-10 text-sm text-gray-400 rounded-lg bg-gray-700 outline-none"
-              placeholder="Search"
-              ref={menuRef}
-            />
+            <input type="search" value={searchTerm} onChange={handleSearch} id="search" className="block w-[600px] p-4 ps-10 text-sm text-white rounded-lg bg-gray-700 outline-none" placeholder="Search" ref={menuRef} />
+
+            {searchResults.users.length > 0 || searchResults.templates.length > 0 ? (
+              <div className="absolute bg-gray-700 text-white font-light mt-2 rounded-md p-2 w-[600px] max-h-[300px] overflow-y-auto shadow-lg" ref={menuRef}>
+                <div>
+                  <h3 className="font-semibold mb-3">Users</h3>
+                  <ul>
+                    {searchResults.users.map((user) => (
+                      <Link to={`/profile/${user.username}`} key={user._id} >
+                        <li className="w-full h-full cursor-pointer hover:bg-blue-500 p-2 duration-200 rounded-md">
+                          {user.username}
+                        </li>
+                      </Link>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <h3 className="font-semibold my-3">Templates</h3>
+                  <ul>
+                    {searchResults.templates.map((template) => (
+                      <Link to={`/template/${template._id}`} key={user._id}>
+                        <li key={template._id} className="p-2 cursor-pointer hover:bg-blue-500 duration-200 rounded-md">
+                          {template.title}
+                        </li>
+                      </Link>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            ) : null}
           </div>
         </div>
-      ) : null}
-
-      <div
-        className={`flex justify-between items-center text-white font-['Exo'] px-20 h-16 text-xl ${styles.background} absolute w-[97%] mt-5 mx-5 overflow-hidden z-[50] duration-500 border-[#ffffff20]`}
-      >
+      }
+      <div className={`flex justify-between items-center text-white font-['Exo'] px-20 h-16 text-xl ${styles.background} absolute w-[97%] mt-5 mx-5 overflow-hidden z-[50] duration-500 border-[#ffffff20]`}>
         <Link to="/">
           <div className="flex items-center justify-center">
             <img className="h-[60px]" src={logo} alt="logo" />

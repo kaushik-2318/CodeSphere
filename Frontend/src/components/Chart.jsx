@@ -1,14 +1,7 @@
 import { useState, useEffect } from "react";
-import {
-  ChartsXAxis,
-  ChartsYAxis,
-  LinePlot,
-  ChartContainer,
-  ChartsGrid,
-  ChartsTooltip,
-} from "@mui/x-charts";
+import { ChartsXAxis, ChartsYAxis, LinePlot, ChartContainer, ChartsGrid, ChartsTooltip, } from "@mui/x-charts";
 import { format } from "date-fns";
-import axios from "axios";
+import { getViewsapi } from "../services/api";
 
 const sumViewsByDateOrMonth = (posts, aggregateByMonth) => {
   const dateViewsMap = {};
@@ -16,19 +9,14 @@ const sumViewsByDateOrMonth = (posts, aggregateByMonth) => {
   posts.forEach((post) => {
     if (post.template && post.template.length > 0) {
       post.template.forEach((template) => {
-        // Ensure that views data exists
         if (template.views && template.views.length > 0) {
           template.views.forEach((view) => {
             let date;
             if (aggregateByMonth) {
-              // Aggregate by month
               date = format(new Date(view.timestamp), "yyyy-MM");
             } else {
-              // Aggregate by day
               date = new Date(view.timestamp).toISOString().split("T")[0];
             }
-
-            // Sum views by date
             dateViewsMap[date] = (dateViewsMap[date] || 0) + view.views;
           });
         }
@@ -49,15 +37,10 @@ const Chart = () => {
   const [viewsData, setViewsData] = useState([]);
 
   const getViews = () => {
-    axios
-      .get(`http://localhost:3000/template/getViews`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      })
+    getViewsapi()
       .then((res) => {
         console.log(res.data);
-        setViewsData(res.data); // Set the fetched views data
+        setViewsData(res.data);
       })
       .catch((error) => {
         if (error.response) {
@@ -72,7 +55,7 @@ const Chart = () => {
   };
 
   useEffect(() => {
-    getViews(); // Fetch views data on component mount
+    getViews();
   }, []);
 
   useEffect(() => {
@@ -94,11 +77,11 @@ const Chart = () => {
       const aggregateByMonth = dateRangeInDays > 30;
 
       const data = sumViewsByDateOrMonth(viewsData, aggregateByMonth);
-      setOverallViewsData(data); // Set the processed views data
+      setOverallViewsData(data);
     } catch (error) {
       console.error("Error processing views data:", error);
     }
-  }, [viewsData]); // Re-run when viewsData changes
+  }, [viewsData]);
 
   const chartData = overallViewsData;
   const sortedChartData = [...chartData].sort((a, b) => a.date - b.date);

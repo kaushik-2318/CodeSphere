@@ -37,22 +37,18 @@ export default function ContactPage() {
 
     setIsSubmitting(true);
 
-    const dataSend = {
-      name,
-      email,
-      phone,
-      message,
-    };
+    const dataSend = { name, email, phone, message, };
 
     try {
-      const res = await fetch(`https://codesphere-nhqa.onrender.com/email/sendEmail`, {
+      const res = await fetch(`https://codesphere-backend.vercel.app/email/sendEmail`, {
         method: "POST",
         body: JSON.stringify(dataSend),
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
         },
-      });
+      }
+      );
 
       if (res.status >= 200 && res.status < 300) {
         alert("Email sent successfully");

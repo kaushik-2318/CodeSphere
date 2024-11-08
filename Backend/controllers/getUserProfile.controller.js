@@ -9,7 +9,7 @@ const getUserProfile = async (req, res, next) => {
             .populate({
                 path: "templates",
                 model: "template",
-                select: "posttitle image livelink githublink",
+                select: "title thumbnail livelink githublink",
             });
 
         if (!user) {
