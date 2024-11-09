@@ -54,9 +54,7 @@ function UploadTemplateDetail({
                         toast.error("Invalid URL");
                     } else {
                         console.log(error);
-                        toast.error(
-                            "An unexpected error occurred while capturing the screenshot."
-                        );
+                        toast.error("An unexpected error occurred while capturing the screenshot.");
                     }
                 }
             }
@@ -114,10 +112,10 @@ function UploadTemplateDetail({
                         )}
                     </div>
                     <div className="pl-4 w-full">
-                        <input  onInput={handleScreenShot}
+                        <input onInput={handleScreenShot}
                             {...register("livelink", {
                                 required: "Live site URL is required",
-                            })} placeholder="www.example.com" className="w-full outline-none rounded-md font-['SpaceGrotesk'] bg-[#27272a] text-white px-3 py-3 text-sm tracking-wider" type="text"/>
+                            })} placeholder="www.example.com" className="w-full outline-none rounded-md font-['SpaceGrotesk'] bg-[#27272a] text-white px-3 py-3 text-sm tracking-wider" type="text" />
                     </div>
                 </div>
 
