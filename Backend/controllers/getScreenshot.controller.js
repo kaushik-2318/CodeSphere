@@ -1,6 +1,7 @@
-const { chromium } = require('playwright');
+const puppeteer = require('puppeteer');
 const path = require('path')
 const { v4: uuid } = require('uuid');
+
 const fs = require('fs')
 
 const screenshot = async (req, res) => {
@@ -13,11 +14,13 @@ const screenshot = async (req, res) => {
     let browser;
     try {
 
-        browser = await chromium.launch({
+        browser = await puppeteer.launch({
             ignoreHTTPSErrors: true
         });
 
+        // browser = await puppeteer.launch();
         const page = await browser.newPage();
+        // await page.goto(url, { waitUntil: 'networkidle2' });
 
         try {
             await page.goto(url, { waitUntil: 'networkidle2' });
@@ -30,7 +33,7 @@ const screenshot = async (req, res) => {
             }
         }
 
-        await page.setViewportSize({ width: 1920, height: 1080 });
+        await page.setViewport({ width: 1920, height: 1080 });
 
         const fileName = `${uuid()}.png`;
         const screenshotPath = path.join(__dirname, '..', 'public', fileName);
