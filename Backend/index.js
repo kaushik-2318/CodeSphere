@@ -15,6 +15,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 
 const contactRouter = require("./routes/contact.routes");
 const authRouter = require("./routes/auth.routes");
