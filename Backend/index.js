@@ -5,6 +5,8 @@ const mongooseconnection = require("./config/mongoose.config");
 const path = require("path");
 const cors = require("cors");
 
+const app = express();
+
 const corsOptions = {
   origin: "https://codesphere-seven.vercel.app",
   credentials: true,
@@ -12,10 +14,7 @@ const corsOptions = {
   allowedHeaders: ["Content-Type", "Authorization"],
 };
 
-const app = express();
-
 app.use(cors(corsOptions));
-app.options("*", cors(corsOptions));
 
 const contactRouter = require("./routes/contact.routes");
 const authRouter = require("./routes/auth.routes");
@@ -34,7 +33,7 @@ app.use("/email", contactRouter);
 app.use("/auth", authRouter);
 app.use("/profile", profileRouter);
 app.use("/template", templaterRouter);
-app.use("/verification", verificationRouter)
+app.use("/verification", verificationRouter);
 app.use("/search", searchRouter);
 
 const PORT = process.env.PORT || 3000;

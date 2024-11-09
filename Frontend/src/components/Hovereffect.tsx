@@ -91,6 +91,7 @@ export const Hovereffect: React.FC<HoverEffectProps> = ({ className }) => {
                     className
                 )}
             >
+                {/* TODO : Sort it According to the likes */}
                 {templates.map((item, idx) => (
                     <div
                         key={item._id}
@@ -113,7 +114,6 @@ export const Hovereffect: React.FC<HoverEffectProps> = ({ className }) => {
                             )}
                         </AnimatePresence>
                         <Card
-                            className=""
                             template={item}
                             updatelike={handleLikeUpdate}
                             addBookMark={handleBookmark}
