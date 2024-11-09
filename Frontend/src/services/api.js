@@ -128,7 +128,7 @@ export const getBookmarkapi = async () => {
 
 //Function to Signup
 export const signupapi = async (data) => {
-    return await axios.post(`${API_BASE_URL}/auth/signup`, data);
+    return await axios.post(`${API_BASE_URL}/auth/register`, data);
 };
 
 
