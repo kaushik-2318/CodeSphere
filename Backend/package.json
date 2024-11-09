@@ -11,6 +11,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@playwright/test": "^1.48.2",
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -26,7 +27,6 @@
     "nodemailer": "^6.9.15",
     "nodemon": "^3.1.4",
     "otp-generator": "^4.0.1",
-    "puppeteer": "^23.7.1",
     "twilio": "^5.3.4",
     "uuid": "^10.0.0",
     "vercel": "^37.6.2"
