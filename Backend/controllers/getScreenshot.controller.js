@@ -14,7 +14,8 @@ const screenshot = async (req, res) => {
     try {
 
         browser = await puppeteer.launch({
-            ignoreHTTPSErrors: true
+            ignoreHTTPSErrors: true,
+            headless: 'true'
         });
 
         const page = await browser.newPage();
