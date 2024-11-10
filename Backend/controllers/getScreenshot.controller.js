@@ -1,7 +1,8 @@
-const puppeteer = require('puppeteer');
-const path = require('path')
+const chromium = require('chrome-aws-lambda');
+const puppeteer = require('puppeteer-core');
+const path = require('path');
 const { v4: uuid } = require('uuid');
-const fs = require('fs')
+const fs = require('fs');
 
 const screenshot = async (req, res) => {
     const url = req.query.url;
@@ -12,14 +13,17 @@ const screenshot = async (req, res) => {
 
     let browser;
     try {
-
+        // Launch Puppeteer with serverless-compatible settings
         browser = await puppeteer.launch({
+            args: chromium.args,
+            executablePath: await chromium.executablePath,
+            headless: chromium.headless,
             ignoreHTTPSErrors: true,
-            headless: 'true'
         });
 
         const page = await browser.newPage();
-       
+
+        // Log the browser version for debugging
         await page.browser().version().then(function (version) {
             console.log(version);
         });
@@ -29,9 +33,8 @@ const screenshot = async (req, res) => {
         } catch (err) {
             if (err.message.includes('net::ERR_NAME_NOT_RESOLVED') || err.message.includes('net::ERR_SSL_UNRECOGNIZED_NAME_ALERT')) {
                 return res.status(400).json({ message: 'Invalid URL' });
-            }
-            else {
-                return res.status(400).json({ message: 'Invalid URL' })
+            } else {
+                return res.status(400).json({ message: 'Invalid URL' });
             }
         }
 
