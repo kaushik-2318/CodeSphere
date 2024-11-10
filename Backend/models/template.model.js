@@ -21,7 +21,7 @@ const templateSchema = mongoose.Schema(
             required: true,
             trim: true,
         },
-        githublink: {
+        githuburl: {
             type: String,
             required: true,
             trim: true,

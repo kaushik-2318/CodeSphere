@@ -11,7 +11,7 @@ const bucket = fbAdmin.storage().bucket();
 
 const createTemplate = async (req, res) => {
     try {
-        const { posttitle, hastag, livelink, githublink, framework, style, language, frameworkCode, styleCode, languageCode, imageUrl } = req.body;
+        const { posttitle, hastag, livelink, githuburl, framework, style, language, frameworkCode, styleCode, languageCode, imageUrl } = req.body;
 
         if (!req.file && !imageUrl) {
             return res.status(400).json({ message: "No image file or URL provided" });
@@ -44,7 +44,7 @@ const createTemplate = async (req, res) => {
             thumbnail: imagePublicUrl,
             hastag,
             livelink,
-            githublink,
+            githuburl,
             owner: req.user._id,
             framework,
             style,
