@@ -1,7 +1,6 @@
 const puppeteer = require('puppeteer');
 const path = require('path')
 const { v4: uuid } = require('uuid');
-
 const fs = require('fs')
 
 const screenshot = async (req, res) => {
@@ -18,9 +17,11 @@ const screenshot = async (req, res) => {
             ignoreHTTPSErrors: true
         });
 
-        // browser = await puppeteer.launch();
         const page = await browser.newPage();
-        // await page.goto(url, { waitUntil: 'networkidle2' });
+       
+        await page.browser().version().then(function (version) {
+            console.log(version);
+        });
 
         try {
             await page.goto(url, { waitUntil: 'networkidle2' });
