@@ -38,10 +38,10 @@ function UploadTemplateDetail({
                 setLoader(true);
                 try {
                     const { data } = await axios.get(
-                        `https://codesphere-ggi8.onrender.comR/template/screenshot?url=${url}`
+                        `https://codesphere-ggi8.onrender.com/template/screenshot?url=${url}`
                     );
                     setImageUrl(
-                        "https://codesphere-ggi8.onrender.comR" + data.screenshotPath
+                        "https://codesphere-ggi8.onrender.com" + data.screenshotPath
                     );
                     setLoader(false);
                 } catch (error) {
