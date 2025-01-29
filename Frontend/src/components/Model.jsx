@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useContext } from "react";
-import { Context } from "../context/ModelContext";
+import { modalContext } from "../context/ModelContext";
 import { Button } from "@nextui-org/button";
 import { toast } from "react-toastify";
 import Checkbox from "@mui/joy/Checkbox";
@@ -10,7 +10,7 @@ import Lock from "/icons/lock-fill.svg";
 import close from "/icons/close-large-fill.svg";
 
 function Model({ open }) {
-    const { setIsOpen } = useContext(Context);
+    const { setIsOpen } = useContext(modalContext);
     const navigate = useNavigate();
 
     const { register, handleSubmit, setError, clearErrors, formState: { errors, isSubmitting } } = useForm({ defaultValues: { rememberMe: true } });

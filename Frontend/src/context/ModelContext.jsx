@@ -1,6 +1,6 @@
 import { createContext } from "react";
 
-export const Context = createContext({
+export const modalContext = createContext({
     isOpen: false,
     setIsOpen: (value) => { },
 });

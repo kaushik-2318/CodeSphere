@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { Button } from "@nextui-org/button";
-import { Context } from "../context/ModelContext.jsx";
+import { modalContext } from "../context/ModelContext.jsx";
 import pin from "/icons/map-pin-fill.svg";
 import setting from "/icons/settings-fill.svg";
 import like from "/icons/heart-3-fill.svg";
@@ -22,7 +22,7 @@ export default function ProfilePage() {
     const [profile, setProfile] = useState({});
     const navigate = useNavigate();
     const [editMode, setEditMode] = useState(false);
-    const { isOpen, setIsOpen } = useContext(Context);
+    const { isOpen, setIsOpen } = useContext(modalContext);
     const [bioLength, setBioLength] = useState(0);
     const [templates, setTemplates] = useState([]);
     const [totalTemplates, setTotalTemplates] = useState(0);

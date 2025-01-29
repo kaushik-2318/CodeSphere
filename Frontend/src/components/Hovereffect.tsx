@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useContext } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Button } from "@nextui-org/react";
-import { Context } from "../context/ModelContext.jsx";
+import { modalContext } from "../context/ModelContext.jsx";
 import { cn } from "../lib/utils.js";
 import Modal from "./Model.jsx";
 
@@ -34,7 +34,7 @@ interface HoverEffectProps {
 export const Hovereffect: React.FC<HoverEffectProps> = ({ className }) => {
 
     const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-    const { isOpen, setIsOpen } = useContext(Context);
+    const { isOpen, setIsOpen } = useContext(modalContext);
     const [templates, setTemplates] = useState<Template[]>([]);
 
     const fetchTemplates = useCallback(() => {

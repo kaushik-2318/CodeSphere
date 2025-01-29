@@ -4,17 +4,9 @@ import Loader from "../components/Loader";
 import { frameworks, styling, languages } from "../constant";
 import { useState } from "react";
 import { toast } from "react-toastify";
-import axios from "axios";
+import { takeScreenshotapi } from "../services/api";
 
-function UploadTemplateDetail({
-    register,
-    errors,
-    setFramework,
-    setStyle,
-    setLanguage,
-    setImageUrl,
-    imageUrl,
-}) {
+function UploadTemplateDetail({ register, errors, setFramework, setStyle, setLanguage, setImageUrl, imageUrl }) {
     const [title, setTitle] = useState("");
     const [loader, setLoader] = useState(false);
 
@@ -37,12 +29,8 @@ function UploadTemplateDetail({
             if (e.target.value !== "") {
                 setLoader(true);
                 try {
-                    const { data } = await axios.get(
-                        `https://codesphere-ggi8.onrender.com/template/screenshot?url=${url}`
-                    );
-                    setImageUrl(
-                        "https://codesphere-ggi8.onrender.com" + data.screenshotPath
-                    );
+                    const { data } = takeScreenshotapi(url);
+                    setImageUrl("https://codesphere-ggi8.onrender.com" + data.screenshotPath);
                     setLoader(false);
                 } catch (error) {
                     setLoader(false);
@@ -121,7 +109,9 @@ function UploadTemplateDetail({
 
                 <div className="flex w-full justify-center items-start gap-2 flex-col">
                     <div className="flex justify-between items-center w-full gap-10">
-                        <label className="text-lg text-justify text-[.875rem] font-medium" htmlFor="hastag">                        </label>
+                        <label className="text-lg text-justify text-[.875rem] font-medium" htmlFor="hastag">
+                            {/* Tags */}
+                        </label>
                     </div>
                     <div className="pl-4 w-full grid grid-cols-3 gap-3">
                         <LanguageSelector set={setFramework} options={frameworks} register={register} errors={errors} />

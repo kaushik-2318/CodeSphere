@@ -1,7 +1,6 @@
 import axios from "axios";
 
 // const API_BASE_URL = "http://localhost:3000";
-// const API_BASE_URL = "https://codesphere-backend.vercel.app";
 const API_BASE_URL = "https://codesphere-ggi8.onrender.com";
 
 
@@ -135,7 +134,7 @@ export const signupapi = async (data) => {
 
 //Function to Login
 export const loginapi = async (data) => {
-    return await axios.post(`${API_BASE_URL}/auth/login`, data,{
+    return await axios.post(`${API_BASE_URL}/auth/login`, data, {
         headers: {
             "Content-Type": "application/json",
         }
@@ -149,4 +148,9 @@ export const getViewsapi = async () => {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
     });
+};
+
+//FUnction to take SreenShot
+export const takeScreenshotapi = async (url) => {
+    return await axios.get(`${API_BASE_URL}/template/screenshot?url=${url}`);
 };

@@ -72,7 +72,7 @@ const loginUser = async function (req, res) {
         let user = await userModel.findOne({ email });
 
         if (!user) {
-            return res.status(401).send({ message: "Email or Password incorrect" });
+            return res.status(401).send({ message: "User does't exit." });
         }
 
         let result = await bcrypt.compare(password, user.password);

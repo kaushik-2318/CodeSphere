@@ -9,7 +9,7 @@ import Profile from "./pages/ProfilePage.jsx";
 import Userprofile from "./pages/UserProfilePage.jsx";
 import Layout from "./pages/Layout.jsx";
 import Upload from "./pages/UploadPage.jsx";
-import { Context } from "./context/ModelContext.jsx";
+import { modalContext } from "./context/ModelContext.jsx";
 import Model from "./components/Model.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import Bookmark from "./pages/BookmarkPage.jsx";
@@ -44,7 +44,7 @@ function App() {
 
   return (
     <>
-      <Context.Provider value={{ isOpen, setIsOpen }}>
+      <modalContext.Provider value={{ isOpen, setIsOpen }}>
         <NavBar />
         <Model open={isOpen} />
         <Routes>
@@ -53,44 +53,14 @@ function App() {
           <Route path="/signup" element={<Layout />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/verification" element={<Layout />} />
-          
           <Route path='/template/:id' element={<Discover />} />
-          
-          <Route
-            path="/profile/:username"
-            element={
-              <Userprofile />
-            }
-          />
-
-          <Route
-            path="/profile"
-            element={
-              <ProtectedRoute>
-                <Profile />
-              </ProtectedRoute>
-            }
-          />
-
-          <Route
-            path="/upload"
-            element={
-              <ProtectedRoute>
-                <Upload />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/bookmark"
-            element={
-              <ProtectedRoute>
-                <Bookmark />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/profile/:username" element={<Userprofile />} />
+          <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+          <Route path="/upload" element={<ProtectedRoute><Upload /></ProtectedRoute>} />
+          <Route path="/bookmark" element={<ProtectedRoute><Bookmark /></ProtectedRoute>} />
         </Routes>
         <Footer />
-      </Context.Provider>
+      </modalContext.Provider>
     </>
   );
 }
