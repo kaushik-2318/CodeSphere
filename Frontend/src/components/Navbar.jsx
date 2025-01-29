@@ -5,9 +5,7 @@ import logo from "/logo.png";
 import Avatar from "@mui/joy/Avatar";
 import gsap from "gsap";
 import Search from "/icons/search.svg";
-import axios from "axios";
-
-import { logoutapi } from "../services/api";
+import { logoutapi, searchApi } from "../services/api";
 
 import styles from "./css/navbar.module.css";
 
@@ -150,15 +148,11 @@ function DesktopNav() {
   const handleSearch = async (event) => {
     const query = event.target.value;
     setSearchTerm(query);
-
     if (query.length > 0) {
       try {
-        const response = await axios.get(`https://codesphere-backend.vercel.app/search/`, {
-          params: { q: query },
-        });
+        const response = await searchApi(query);
         setSearchResults(response.data);
         console.log(response.data);
-
       } catch (error) {
         console.error("Search error:", error);
       }

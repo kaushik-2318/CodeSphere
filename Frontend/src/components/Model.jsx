@@ -1,3 +1,4 @@
+import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useContext } from "react";
@@ -8,6 +9,8 @@ import Checkbox from "@mui/joy/Checkbox";
 import Mail from "/icons/mail-fill.svg";
 import Lock from "/icons/lock-fill.svg";
 import close from "/icons/close-large-fill.svg";
+import { loginapi } from "../services/api";
+
 
 function Model({ open }) {
     const { setIsOpen } = useContext(modalContext);
@@ -22,28 +25,19 @@ function Model({ open }) {
     const onSubmit = async (data) => {
         setError("serverError", null);
         try {
-            let r = await fetch("https://codesphere-backend.vercel.app/auth/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                credentials: "include",
-                body: JSON.stringify(data),
-            });
+            const response = await loginapi(data);
+            localStorage.setItem("token", response.data.token);
 
-            if (!r.ok) {
-                const errorRes = await r.json();
-                throw new Error(errorRes.message || "Login failed");
-            }
-            const responseData = await r.json();
-            localStorage.setItem("token", responseData.token);
             toast.success("Logged In Successfully");
             setIsOpen(false);
             window.location.reload();
         } catch (error) {
-            setError("serverError", { message: error.message });
+            const errorMessage = error.response?.data?.message || "Login failed";
+            setError("serverError", { message: errorMessage });
         }
     };
+
+
 
     return (
         <>

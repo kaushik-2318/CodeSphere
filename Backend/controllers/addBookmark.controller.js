@@ -20,21 +20,17 @@ const addBookmark = async (req, res) => {
             );
             await user.save();
 
-            return res
-                .status(200)
-                .json({ message: "Template removed from bookmarks" });
+            return res.status(200).json({ message: "Template removed from bookmarks", bookmark: false });
         } else {
             const template = await templateModel.findById(templateId);
             if (!template) {
-                return res.status(404).json({ message: "Template not found" });
+                return res.status(404).json({ message: "Template not found", bookmark: false });
             }
 
             user.bookmark.push(templateId);
             await user.save();
 
-            return res
-                .status(200)
-                .json({ message: "Template bookmarked successfully" });
+            return res.status(200).json({ message: "Template bookmarked successfully", bookmark: true });
         }
     } catch (error) {
         console.error("Error in bookmarking template:", error);

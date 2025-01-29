@@ -1,26 +1,64 @@
-import { useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { Button } from "@nextui-org/button";
 import iconBookmark from "/icons/bookmark-line.svg";
 import iconBookmarkFill from "/icons/bookmark-fill.svg";
 import iconLike from "/icons/heart-line.svg";
 import iconLikeFill from "/icons/heart-fill.svg";
 import more from "/icons/more-fill.svg";
-import { getBookmarkapi } from "../services/api";
+import { addBookmarkapi, getBookmarkapi, updateLikeapi } from "../services/api";
+import { modalContext } from "../context/ModelContext.jsx";
+
+
 
 function BookmarkPage() {
+    const { isOpen, setIsOpen } = useContext(modalContext);
     const [bookmarks, setBookmarks] = useState([]);
 
     const getBookmark = () => {
         getBookmarkapi()
-            .then((res) => {
-                setBookmarks(res.data.user.bookmark);
-            })
+            .then((res) => setBookmarks(res.data.bookmarks))
             .catch((err) => console.error(err));
     };
 
     useEffect(() => {
         getBookmark();
     }, []);
+
+    const handleLikeUpdate = useCallback(
+        async (templateId) => {
+            try {
+                const res = await updateLikeapi(templateId, localStorage.getItem("token"));
+                getBookmark();
+                setIsOpen(false);
+                return res;
+            } catch (err) {
+                console.error("Error updating like:", err);
+                if (err.response && err.response.status === 401) {
+                    setIsOpen(true);
+                }
+                throw err;
+            }
+        },
+        [getBookmark, setIsOpen]
+    );
+
+    const handleBookmarkUpdate = useCallback(
+        async (templateId) => {
+            try {
+                const res = await addBookmarkapi(templateId, localStorage.getItem("token"));
+                getBookmark();
+                setIsOpen(false);
+                return res;
+            } catch (err) {
+                console.error(err);
+                if (err.response && err.response.status === 401) {
+                    setIsOpen(true);
+                }
+            }
+        },
+        [getBookmark, setIsOpen]
+    );
+
 
     return (
         <div className="bg-[#1d2734] mb-[300px] min-h-screen">
@@ -31,7 +69,7 @@ function BookmarkPage() {
                 {bookmarks.length > 0 ? (
                     bookmarks.map((bookmark, idx) => (
                         <div key={idx}>
-                            <Card bookmark={bookmark} />
+                            <Card bookmark={bookmark} updatelike={handleLikeUpdate} addBookMark={handleBookmarkUpdate} />
                         </div>
                     ))
                 ) : (
@@ -48,9 +86,32 @@ function BookmarkPage() {
 
 export default BookmarkPage;
 
-const Card = ({ bookmark }) => {
-    const [isLike, setIsLike] = useState(null);
-    const [isBookmark, setIsBookmark] = useState(false);
+const Card = ({ bookmark, updatelike, addBookMark }) => {
+
+
+    const [isBookmark, setIsBookmark] = useState(true);
+    const [isLiked, setIsLiked] = useState(bookmark.userLiked);
+
+    const handleBookmarkClick = () => {
+        addBookMark(bookmark._id)
+            .then((res) => {
+                setIsBookmark(res.data.bookmark);
+            })
+            .catch((err) => {
+                console.error("Error updating bookmark:", err);
+            });
+    };
+
+
+    const handleLikeClick = () => {
+        updatelike(bookmark._id)
+            .then((res) => {
+                setIsLiked(res.data.liked);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
 
     return (
         <>
@@ -89,10 +150,10 @@ const Card = ({ bookmark }) => {
                         </Button>
                         <div className="flex flex-row justify-center items-center gap-5">
                             <div className="flex items-center justify-center gap-2">
-                                <img className="w-5 relative top-[1px]" src={isLike ? iconLikeFill : iconLike} alt="Like Button" />
+                                <img onClick={handleLikeClick} className="w-5 relative top-[1px]" src={isLiked ? iconLikeFill : iconLike} alt="Like Button" />
                             </div>
                             <div className="flex items-center justify-center gap-2">
-                                <img className="w-5 relative top-[1px]" src={isBookmark ? iconBookmarkFill : iconBookmark} alt="Bookmark" />
+                                <img onClick={handleBookmarkClick} className="w-5 relative top-[1px]" src={isBookmark ? iconBookmarkFill : iconBookmark} alt="Bookmark" />
                             </div>
                         </div>
                     </div>

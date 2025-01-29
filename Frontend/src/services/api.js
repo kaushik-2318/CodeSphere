@@ -1,12 +1,14 @@
 import axios from "axios";
 
-// const API_BASE_URL = "http://localhost:3000";
-const API_BASE_URL = "https://codesphere-ggi8.onrender.com";
+const API_BASE_URL = "http://localhost:3000";
+// const API_BASE_URL = "https://codesphere-ggi8.onrender.com";
 
 
 // Function to get all template
 export const getAllTemplatesapi = async () => {
-    return await axios.get(`${API_BASE_URL}/template/getalltemplate`);
+    const token = localStorage.getItem("token");
+    const config = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
+    return await axios.get(`${API_BASE_URL}/template/getalltemplate`, config);
 };
 
 
@@ -25,9 +27,7 @@ export const updateLikeapi = async (templateId, token) => {
 
 // Function to add Bookmark
 export const addBookmarkapi = async (templateId, token) => {
-    return await axios.put(
-        `${API_BASE_URL}/template/addbookmark/${templateId}`,
-        {},
+    return await axios.put(`${API_BASE_URL}/template/addbookmark/${templateId}`, {},
         {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -150,7 +150,24 @@ export const getViewsapi = async () => {
     });
 };
 
-//FUnction to take SreenShot
+//Function to take ScreenShot
 export const takeScreenshotapi = async (url) => {
     return await axios.get(`${API_BASE_URL}/template/screenshot?url=${url}`);
+};
+
+//Function to get Search
+export const searchApi = async (query) => {
+    return await axios.get(`${API_BASE_URL}/search/`, {
+        params: { q: query },
+    });
+};
+
+//Function to send Email
+export const sendEmailApi = async (data) => {
+    return await axios.post(`${API_BASE_URL}/email/sendEmail`, data, {
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+        },
+    });
 };

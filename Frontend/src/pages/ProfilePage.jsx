@@ -380,12 +380,21 @@ export default function ProfilePage() {
 }
 
 export const Card = ({ template, profile }) => {
+
+    const [model, setModel] = useState(false);
+    const navigate = useNavigate();
+    
     const handleClick = (e) => {
         e.preventDefault();
         setModel(!model);
     };
 
-    const [model, setModel] = useState(false);
+    const handleNavigation = (e) => {
+        e.preventDefault();
+        navigate(`/template/${template._id}`);
+    }
+    
+    console.log(template)
 
     return (
         <>
@@ -428,7 +437,7 @@ export const Card = ({ template, profile }) => {
                         </div>
 
                         <div className="flex items-center justify-between pt-3">
-                            <Button className="bg-[#0064d7]  rounded-lg h-full py-2 font-normal tracking-wider disabled:bg-[#0064d769] disabled:cursor-not-allowed">
+                            <Button onClick={handleNavigation} className="bg-[#0064d7]  rounded-lg h-full py-2 font-normal tracking-wider disabled:bg-[#0064d769] disabled:cursor-not-allowed">
                                 Discover
                             </Button>
                             <div className="flex items-center justify-center gap-2">

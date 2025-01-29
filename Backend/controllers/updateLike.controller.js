@@ -19,7 +19,7 @@ const updateLike = async (req, res) => {
             user.like.push(templateId);
             await postLike.save();
             await user.save();
-            return res.status(201).json({ message: "Post liked" });
+            return res.status(201).json({ liked: true });
         }
 
         const hasLiked = postLike.userId.includes(userId);
@@ -37,9 +37,8 @@ const updateLike = async (req, res) => {
         await postLike.save();
         await user.save();
 
-        return res
-            .status(200)
-            .json({ message: hasLiked ? "Post unliked" : "Post liked" });
+        return res.status(200).json({ liked: !hasLiked });
+
     } catch (error) {
         console.error("Error Occurred:", error);
         res.status(500).json({ message: "Error", error });

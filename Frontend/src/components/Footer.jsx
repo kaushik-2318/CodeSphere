@@ -59,7 +59,7 @@ export default function Footer() {
                         </Link>
                         <Link
                             target="blank"
-                            to="https://www.instagram.com/kaushikverma_19?igsh=MXhhN3phY2VscnFlYw=="
+                            to="https://www.instagram.com/kaushikverma.me/"
                         >
                             <div className="w-10 h-10 transition-transform duration-300 hover:scale-110">
                                 <svg

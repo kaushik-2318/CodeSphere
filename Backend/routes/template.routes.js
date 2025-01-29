@@ -19,7 +19,7 @@ router.post("/createtemplate", isAuthenticated, (req, res, next) => { upload.sin
 router.get("/getalltemplate", likeAuthenticated, getAllTemplates);
 router.put("/updateLike/:id", isAuthenticated, updateLike);
 router.put("/addbookmark/:id", isAuthenticated, addbookmark);
-router.get("/getBookmark", isAuthenticated, getBookmark);
+router.get("/getbookmark", isAuthenticated, getBookmark);
 router.get("/screenshot", getScreenshot);
 router.get("/:id", getTemplate);
 

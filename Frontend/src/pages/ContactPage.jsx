@@ -1,6 +1,7 @@
 import { useState } from "react";
 import styles from "./css/contactpage.module.css";
 import arrow from "/icons/arrow-right-line.svg";
+import { sendEmailOtpapi } from "../services/api";
 
 export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -37,30 +38,16 @@ export default function ContactPage() {
 
     setIsSubmitting(true);
 
-    const dataSend = { name, email, phone, message, };
+    const dataSend = { name, email, phone, message };
 
     try {
-      const res = await fetch(`https://codesphere-backend.vercel.app/email/sendEmail`, {
-        method: "POST",
-        body: JSON.stringify(dataSend),
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      }
-      );
-
-      if (res.status >= 200 && res.status < 300) {
-        alert("Email sent successfully");
-        setMessageReceived(true);
-
-        document.getElementById("name").value = "";
-        document.getElementById("email").value = "";
-        document.getElementById("phone").value = "";
-        document.getElementById("message").value = "";
-      } else {
-        throw new Error(`Failed with status: ${res.status}`);
-      }
+      await sendEmailOtpapi(dataSend);
+      alert("Email sent successfully");
+      setMessageReceived(true);
+      document.getElementById("name").value = "";
+      document.getElementById("email").value = "";
+      document.getElementById("phone").value = "";
+      document.getElementById("message").value = "";
     } catch (error) {
       console.error(error);
       alert("Failed to send the email. Please try again later.");
