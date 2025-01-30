@@ -101,7 +101,7 @@ function UploadPage() {
     return (
         <div className={`flex flex-col justify-center relative items-center text-white w-full font-['SpaceGrotesk'] bg-no-repeat bg-[#05071a] ${styles.background} mb-[300px]`}>
             {page === 1 && (
-                <div className={`w-[90%] m-10 h-96 absolute top-24 z-[1] rounded-xl bg-cover bg-center bg-no-repeat`} style={{ backgroundImage: `linear-gradient(180deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${preview || imageUrl})`, }}>
+                <div className={`w-[90%] m-10 h-96 absolute top-24 z-[1] rounded-xl bg-cover bg-center bg-no-repeat`} style={{ backgroundImage: `linear-gradient(180deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${preview || imageUrl})`}}>
                     <div className="w-full h-full relative">
                         <button className="bg-transparent backdrop-blur-2xl p-2 w-10 h-10 flex hover:bg-blue-500 hover:border-blue-500 duration-200 justify-center items-center cursor-pointer rounded-lg absolute right-5 top-5 border-2" style={panel ? { backgroundColor: "rgb(59, 130, 246)", border: "1px solid rgb(59,130, 246)", } : { backgroundColor: "" }} onClick={() => { setPanel(!panel) }}>
                             <img className="w-8 h-8" src={more} alt="More Icon" />

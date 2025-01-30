@@ -173,7 +173,7 @@ export const Card: React.FC<CardProps> = ({ className, template, updatelike, add
 
                 <div className="flex flex-row items-center justify-start gap-4 mt-4">
                     <div className="w-10 h-10 rounded-full">
-                        <img className="w-10 h-10 rounded-full" src={template.owner.profilepicture} alt="Profile Picture" />
+                        <img className="min-w-10 min-h-10 rounded-full" src={template.owner.profilepicture} alt="Profile Picture" />
                     </div>
                     <div className="flex flex-col justify-center items-start">
                         <div className="font-['Montserrat'] text-zinc-100 tracking-wide">

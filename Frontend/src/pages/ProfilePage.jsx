@@ -6,7 +6,6 @@ import { Button } from "@nextui-org/button";
 import { modalContext } from "../context/ModelContext.jsx";
 import pin from "/icons/map-pin-fill.svg";
 import setting from "/icons/settings-fill.svg";
-import like from "/icons/heart-3-fill.svg";
 import bookmark from "/icons/bookmark-fill.svg";
 import more from "/icons/more-fill.svg";
 import pencil from "/icons/pencil-fill.svg";
@@ -183,10 +182,6 @@ export default function ProfilePage() {
                                         Bookmarks
                                     </li>
                                 </Link>
-                                <li className="flex cursor-pointer gap-3 justify-start items-center mx-8 pl-1 py-5 duration-300 border-2 border-transparent hover:border-b-gray-700">
-                                    <img width={20} src={like} alt="" />
-                                    Likes
-                                </li>
                                 <l onClick={logout} className="flex cursor-pointer gap-3 justify-start items-center mx-8 pl-1 py-5 duration-300 border-2 border-transparent hover:border-b-gray-700 hover:text-red-500 group/hover"   >
                                     <div className="w-[20px]">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className={`fill-white group-hover/hover:fill-red-500 duration-300`}   >
@@ -355,10 +350,7 @@ export default function ProfilePage() {
                                     <div>
                                         <div className="grid grid-cols-1 md:grid-cols-3 py-10 gap-10">
                                             {templates.map((template, idx) => (
-                                                <div
-                                                    key={idx}
-                                                    className="flex items-center justify-center w-96"
-                                                >
+                                                <div key={idx} className="flex items-center justify-center w-96" >
                                                     <Card template={template} profile={profile} />
                                                 </div>
                                             ))}
@@ -383,7 +375,7 @@ export const Card = ({ template, profile }) => {
 
     const [model, setModel] = useState(false);
     const navigate = useNavigate();
-    
+
     const handleClick = (e) => {
         e.preventDefault();
         setModel(!model);
@@ -393,7 +385,7 @@ export const Card = ({ template, profile }) => {
         e.preventDefault();
         navigate(`/template/${template._id}`);
     }
-    
+
     console.log(template)
 
     return (
@@ -421,24 +413,18 @@ export const Card = ({ template, profile }) => {
 
                         <div className="flex flex-row items-center justify-start gap-4 mt-4">
                             <div className="w-10 h-10 rounded-full">
-                                <img className="w-10 h-10 rounded-full" src={profile.profilepicture} alt="Profile Picture" />
+                                <img className="min-w-10 min-h-10 rounded-full" src={profile.profilepicture} alt="Profile Picture" />
                             </div>
                             <div className="flex flex-col justify-center items-start">
                                 <div className="font-['Montserrat'] text-zinc-100 tracking-wide">
                                     {template.title}
-                                </div>
-                                <div>
-                                    @
-                                    <span className="font-['Montserrat'] italic">
-                                        {profile.username}
-                                    </span>
                                 </div>
                             </div>
                         </div>
 
                         <div className="flex items-center justify-between pt-3">
                             <Button onClick={handleNavigation} className="bg-[#0064d7]  rounded-lg h-full py-2 font-normal tracking-wider disabled:bg-[#0064d769] disabled:cursor-not-allowed">
-                                Discover
+                                Edit
                             </Button>
                             <div className="flex items-center justify-center gap-2">
                                 Total Like: {template.likeCount}

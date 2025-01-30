@@ -7,7 +7,7 @@ import iconLikeFill from "/icons/heart-fill.svg";
 import more from "/icons/more-fill.svg";
 import { addBookmarkapi, getBookmarkapi, updateLikeapi } from "../services/api";
 import { modalContext } from "../context/ModelContext.jsx";
-
+import { BackgroundBeams } from "../components/ui/background-beams.jsx";
 
 
 function BookmarkPage() {
@@ -61,7 +61,7 @@ function BookmarkPage() {
 
 
     return (
-        <div className="bg-[#1d2734] mb-[300px] min-h-screen">
+        <div className="bg-slate-900 mb-[300px] min-h-screen">
             <div className="pt-28 ml-20 text-5xl text-white font-['Exo'] border-gray-600 border-b-2 pb-3 w-[90%]">
                 Saved
             </div>
@@ -80,6 +80,7 @@ function BookmarkPage() {
                     </div>
                 )}
             </div>
+            <BackgroundBeams />
         </div>
     );
 }
@@ -129,7 +130,7 @@ const Card = ({ bookmark, updatelike, addBookMark }) => {
 
                     <div className="flex flex-row items-center justify-start gap-4 mt-4">
                         <div className="w-10 h-10 rounded-full">
-                            <img className="w-10 h-10 rounded-full" src={bookmark.owner.profilepicture} alt="Profile Picture" />
+                            <img className="min-w-10 min-h-10 rounded-full" src={bookmark.owner.profilepicture} alt="Profile Picture" />
                         </div>
                         <div className="flex flex-col justify-center items-start">
                             <div className="font-['Montserrat'] text-zinc-100 tracking-wide">

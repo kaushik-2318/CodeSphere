@@ -153,7 +153,7 @@ function Model({ open }) {
                                 <div>
                                     Not registered?{" "}
                                     <span className="text-blue-500 duration-500 cursor-pointer hover:text-blue-800">
-                                        <Link to="/signup">Create account</Link>
+                                        <Link onClick={(e) => { e.preventDefault(); navigate('/signup'); setIsOpen(false); }}>Create account</Link>
                                     </span>
                                 </div>
                             </div>
