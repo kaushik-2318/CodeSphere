@@ -32,7 +32,7 @@ export default function Footer() {
                             />
                             <button
                                 type="submit"
-                                className="p-3 px-5 font-light text-white bg-blue-500 rounded-xl"
+                                className="p-3 px-5 font-light text-white bg-[#0064d7] rounded-xl"
                             >
                                 Suscribe
                             </button>

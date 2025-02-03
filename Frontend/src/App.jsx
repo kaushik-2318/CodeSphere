@@ -14,6 +14,7 @@ import Model from "./components/Model.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import Bookmark from "./pages/BookmarkPage.jsx";
 import Discover from "./pages/TemplatePage.jsx"
+import Edit from "./pages/TemplateEditPage.jsx"
 
 function App() {
   const lenisRef = useRef(null);
@@ -54,6 +55,7 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/verification" element={<Layout />} />
           <Route path='/template/:id' element={<Discover />} />
+          <Route path='/template/edit/:id' element={<Edit />} />
           <Route path="/profile/:username" element={<Userprofile />} />
           <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
           <Route path="/upload" element={<ProtectedRoute><Upload /></ProtectedRoute>} />

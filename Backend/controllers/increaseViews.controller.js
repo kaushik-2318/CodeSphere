@@ -1,4 +1,4 @@
-const View = require("../models/view.model");
+const Template = require("../models/template.model");
 
 const increaseViews = async (req, res) => {
     try {
@@ -6,19 +6,12 @@ const increaseViews = async (req, res) => {
         const today = new Date();
         const startOfDay = new Date(today.setHours(0, 0, 0, 0));
 
-        const viewDocument = await View.findOne({ "template.templateId": templateId });
-
-        if (!viewDocument) {
-            return res.status(404).json({ message: "View document not found for this template" });
-        }
-
-        const templateEntry = viewDocument.template.find(template => template.templateId.toString() === templateId);
-
-        if (!templateEntry) {
+        const template = await Template.findById(templateId);
+        if (!template) {
             return res.status(404).json({ message: "Template not found" });
         }
 
-        const todayEntry = templateEntry.views.find(view => {
+        const todayEntry = template.views.find(view => {
             const entryDate = new Date(view.timestamp);
             return (
                 entryDate.getFullYear() === startOfDay.getFullYear() &&
@@ -30,18 +23,15 @@ const increaseViews = async (req, res) => {
         if (todayEntry) {
             todayEntry.views += 1;
         } else {
-            templateEntry.views.push({
+            template.views.push({
                 timestamp: startOfDay,
                 views: 1,
             });
         }
 
-        await viewDocument.save();
+        await template.save();
 
-        res.status(200).json({
-            message: "View count increased successfully",
-            totalViews: templateEntry.views.reduce((acc, view) => acc + view.views, 0),
-        });
+        res.status(200).json({ message: "View count increased successfully", totalViews: template.views.reduce((acc, view) => acc + view.views, 0), });
     } catch (error) {
         console.error("Error increasing view count:", error);
         res.status(500).json({ message: "Internal Server Error" });

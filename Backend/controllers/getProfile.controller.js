@@ -6,7 +6,7 @@ const getProfile = async function (req, res, next) {
             .populate({
                 path: "templates",
                 model: "template",
-                select: "title thumbnail"
+                select: "title thumbnail views"
             })
             .select("-password -contactnumber -email -_id -like -bookmark -date -updatedAt -createdAt");
 

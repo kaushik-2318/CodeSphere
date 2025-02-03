@@ -7,7 +7,7 @@ const templateSchema = mongoose.Schema(
             required: true,
             trim: true,
             minlength: 3,
-            maxlength: 20,
+            maxlength: 70,
         },
         thumbnail: {
             type: String,
@@ -55,6 +55,16 @@ const templateSchema = mongoose.Schema(
             type: String,
             required: true,
         },
+        views: [{
+            timestamp: {
+                type: Date,
+                required: true,
+            },
+            views: {
+                type: Number,
+                required: true,
+            }
+        }],
         date: { type: Date, default: Date.now },
     },
     { timestamps: true }

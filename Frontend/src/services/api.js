@@ -1,7 +1,7 @@
 import axios from "axios";
 
-// const API_BASE_URL = "http://localhost:3000";
-const API_BASE_URL = "https://codesphere-ggi8.onrender.com";
+const API_BASE_URL = "http://localhost:3000";
+// const API_BASE_URL = "https://codesphere-ggi8.onrender.com";
 
 
 // Function to get all template
@@ -168,6 +168,16 @@ export const sendEmailApi = async (data) => {
         headers: {
             "Accept": "application/json",
             "Content-Type": "application/json",
+        },
+    });
+};
+
+// Function to Edit Template
+export const editTemplateApi = async (templateId, formData) => {
+    return await axios.post(`${API_BASE_URL}/template/edit/${templateId}`, formData, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "multipart/form-data"
         },
     });
 };

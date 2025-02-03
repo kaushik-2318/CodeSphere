@@ -9,6 +9,7 @@ const increaseViews = require("../controllers/increaseViews.controller.js");
 const getViews = require("../controllers/getViews.controller.js");
 const getScreenshot = require("../controllers/getScreenshot.controller.js");
 const getTemplate = require("../controllers/getTemplate.controller.js")
+const {editTemplate} = require("../controllers/editTemplate.controller.js")
 const isAuthenticated = require("../middleware/auth.middleware.js");
 const likeAuthenticated = require("../middleware/like.middleware.js");
 const upload = require("../config/multer.config");
@@ -21,6 +22,7 @@ router.put("/updateLike/:id", isAuthenticated, updateLike);
 router.put("/addbookmark/:id", isAuthenticated, addbookmark);
 router.get("/getbookmark", isAuthenticated, getBookmark);
 router.get("/screenshot", getScreenshot);
+router.post("/edit/:id", isAuthenticated, upload.any(), editTemplate);
 router.get("/:id", getTemplate);
 
 module.exports = router;

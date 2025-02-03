@@ -25,6 +25,9 @@ export default function ProfilePage() {
     const [bioLength, setBioLength] = useState(0);
     const [templates, setTemplates] = useState([]);
     const [totalTemplates, setTotalTemplates] = useState(0);
+    const [views, setViews] = useState([]);
+    const [previewCover, setPreviewCover] = useState("");
+    const [previewProfile, setPreviewProfile] = useState("");
 
     const { register, clearErrors, handleSubmit, formState: { isSubmitting } } = useForm();
 
@@ -197,63 +200,36 @@ export default function ProfilePage() {
                     {/* PROFILE SECTION START */}
                     <div className=" flex w-full justify-between">
                         {profile && profile.coverphoto ? (
-                            <div
-                                className={`bg-no-repeat bg-center bg-cover bg-fixed  items-center absolute h-[340px] w-[1200px]`}
-                                style={{
-                                    backgroundImage: `linear-gradient(90deg, rgba(29,39,52,0.3) 0%, rgba(29,39,52,0.6) 40%, rgba(29,39,52,0.9) 67%, rgba(29,39,52,1) 100%), url(${profile.coverphoto})`,
-                                }}
-                            ></div>
+                            <div className={`bg-no-repeat bg-center bg-cover bg-fixed  items-center absolute h-[340px] w-[1200px]`} style={{ backgroundImage: `linear-gradient(90deg, rgba(29,39,52,0.3) 0%, rgba(29,39,52,0.6) 40%, rgba(29,39,52,0.9) 67%, rgba(29,39,52,1) 100%), url(${previewCover || profile.coverphoto})`, }}></div>
                         ) : (
-                            <div
-                                className={`bg-no-repeat bg-cover bg-center bg-fixed items-center absolute h-[340px]`}
-                                style={{
-                                    backgroundImage: `linear-gradient(90deg, rgba(29,39,52,0.3) 0%, rgba(29,39,52,0.6) 40%, rgba(29,39,52,0.9) 67%, rgba(29,39,52,1) 100%)`,
-                                }}
-                            ></div>
+                            <div className={`bg-no-repeat bg-cover bg-center bg-fixed items-center absolute h-[340px]`} style={{ backgroundImage: `linear-gradient(90deg, rgba(29,39,52,0.3) 0%, rgba(29,39,52,0.6) 40%, rgba(29,39,52,0.9) 67%, rgba(29,39,52,1) 100%)`, }}></div>
                         )}
                         <div className="w-full z-[1] pt-[90px] pl-20 p-5 pr-20">
                             <div className="uppercase border-b-[1px] mb-10 text-2xl tracking-wider font-bold pb-4 border-gray-600 text-[#f04f58] flex justify-between items-center">
                                 Profile
                                 {editMode && (
                                     <div className="grid text-white font-['Exo'] font-light max-w-sm items-center gap-1.5">
-                                        <label
-                                            className="font-normal rounded-md border-gray-400 border-2 text-white text-sm hover:bg-blue-500 hover:border-blue-500 duration-200 py-1 px-3"
-                                            htmlFor="coverbackground"
-                                        >
+                                        <label className="font-normal rounded-md border-gray-400 border-2 text-white text-sm hover:bg-blue-500 hover:border-blue-500 duration-200 py-1 px-3" htmlFor="coverbackground">
                                             Change Background
                                         </label>
-                                        {/* <input hidden {...register("coverphoto")} onChange={(e) => setPreviewCover(URL.createObjectURL(e.target.files[0]))} accept="image/*" id='coverbackground' type="file" /> */}
-                                        <input
-                                            hidden
-                                            {...register("coverphoto")}
-                                            accept="image/*"
-                                            id="coverbackground"
-                                            type="file"
-                                        />
+                                        <input hidden {...register("coverphoto")} accept="image/*" id="coverbackground" type="file" onChange={(e) => { setPreviewCover(URL.createObjectURL(e.target.files[0])) }} />
                                     </div>
                                 )}
                             </div>
                             <div className="flex">
                                 <div className="h-[100px] w-[100px] flex justify-center items-center border-white" style={editMode ? { display: "none" } : { display: "block" }}>
-                                    <img className="rounded-full h-[90px] w-[90px] object-cover" src={profile?.profilepicture} alt="Profile" />
+                                    <img className="rounded-full h-[90px] w-[90px] object-cover" src={previewProfile || profile?.profilepicture} alt="Profile" />
                                 </div>
 
                                 {editMode && (
                                     <>
                                         <label className="h-[100px] w-[100px] border-white cursor-pointer relative" htmlFor="profilepicture"        >
-                                            <img className="rounded-full h-[90px] w-[90px] border-2 object-cover" src={profile.profilepicture} alt="Profile Picture" />
+                                            <img className="rounded-full h-[90px] w-[90px] border-2 object-cover" src={previewProfile || profile.profilepicture} alt="Profile Picture" />
                                             <div className="w-[20px] h-[20px] bg-blue-500 absolute right-2 bottom-2 rounded-md flex justify-center items-center">
                                                 <img className="w-[15px] h-[15px]" src={pencil} alt="Edit Icon" />
                                             </div>
                                         </label>
-                                        {/* <input hidden {...register("profilepicture")} onChange={(e) => setProfilePicture(URL.createObjectURL(e.target.files[0]))} type="file" id='profilepicture' accept="image/*" /> */}
-                                        <input
-                                            hidden
-                                            {...register("profilepicture")}
-                                            type="file"
-                                            id="profilepicture"
-                                            accept="image/*"
-                                        />
+                                        <input hidden {...register("profilepicture")} type="file" id="profilepicture" accept="image/*" onChange={(e) => { setPreviewProfile(URL.createObjectURL(e.target.files[0])) }} />
                                     </>
                                 )}
                                 <div className="pl-10  flex flex-row justify-between w-full pr-20">
@@ -383,10 +359,8 @@ export const Card = ({ template, profile }) => {
 
     const handleNavigation = (e) => {
         e.preventDefault();
-        navigate(`/template/${template._id}`);
+        navigate(`/template/edit/${template._id}`);
     }
-
-    console.log(template)
 
     return (
         <>
