@@ -7,15 +7,15 @@ const cors = require("cors");
 
 const app = express();
 
-// const corsOptions = {
-//   origin: `${process.env.CLIENT_URL}`,
-//   credentials: true,
-//   methods: ["GET", "POST", "PUT", "DELETE"],
-//   allowedHeaders: ["Content-Type", "Authorization"],
-// };
-app.use(cors())
-// app.use(cors(corsOptions));
-// app.options("*", cors(corsOptions));
+const corsOptions = {
+  origin: `${process.env.CLIENT_URL}`,
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 
 const contactRouter = require("./routes/contact.routes");
 const authRouter = require("./routes/auth.routes");
