@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@nextui-org/button";
 import Editor from "@monaco-editor/react";
 import { editTemplateApi, getTemplateapi } from "../services/api";
 import { useForm } from "react-hook-form";
 import { modalContext } from "../context/ModelContext.jsx";
-
 
 
 function TemplateEditPage() {

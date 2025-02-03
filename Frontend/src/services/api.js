@@ -181,3 +181,12 @@ export const editTemplateApi = async (templateId, formData) => {
         },
     });
 };
+
+// Function to Delete Template
+export const deleteTemplateApi = async (templateId) => {
+    return await axios.delete(`${API_BASE_URL}/template/delete/${templateId}`, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+    });
+}

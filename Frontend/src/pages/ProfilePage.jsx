@@ -11,23 +11,26 @@ import more from "/icons/more-fill.svg";
 import pencil from "/icons/pencil-fill.svg";
 import Chart from "../components/Chart.jsx";
 import Modal from "../components/Model.jsx";
-
+import close from "/icons/close-large-fill.svg";
 import styles from "./css/profilepage.module.css";
 
-import { getLoginUserProfileapi, logoutapi, updateLoginUserProfileapi } from "../services/api.js";
+import { deleteTemplateApi, getLoginUserProfileapi, logoutapi, updateLoginUserProfileapi } from "../services/api.js";
 
 
 export default function ProfilePage() {
-    const [profile, setProfile] = useState({});
     const navigate = useNavigate();
+
+    const [profile, setProfile] = useState({});
     const [editMode, setEditMode] = useState(false);
     const { isOpen, setIsOpen } = useContext(modalContext);
     const [bioLength, setBioLength] = useState(0);
     const [templates, setTemplates] = useState([]);
     const [totalTemplates, setTotalTemplates] = useState(0);
-    const [views, setViews] = useState([]);
     const [previewCover, setPreviewCover] = useState("");
     const [previewProfile, setPreviewProfile] = useState("");
+    const [popup, setPopup] = useState(false);
+    const [deleteTemp, setDeleteTemp] = useState("");
+
 
     const { register, clearErrors, handleSubmit, formState: { isSubmitting } } = useForm();
 
@@ -151,6 +154,7 @@ export default function ProfilePage() {
 
     return (
         <>
+            {popup && <Popup setPopup={setPopup} popup={popup} deleteTemp={deleteTemp} getProfile={getProfile} />}
             {isOpen && <Modal open={isOpen} />}
             <form onSubmit={handleSubmit(handleProfileUpdate, handleProfileUpdateErrors)} onChange={handleInputChange}>
                 <div className="bg-[#1d2734] mb-[300px] flex min-h-screen">
@@ -327,7 +331,7 @@ export default function ProfilePage() {
                                         <div className="grid grid-cols-1 md:grid-cols-3 py-10 gap-10">
                                             {templates.map((template, idx) => (
                                                 <div key={idx} className="flex items-center justify-center w-96" >
-                                                    <Card template={template} profile={profile} />
+                                                    <Card template={template} profile={profile} setPopup={setPopup} setDeleteTemp={setDeleteTemp} />
                                                 </div>
                                             ))}
                                         </div>
@@ -347,7 +351,7 @@ export default function ProfilePage() {
     );
 }
 
-export const Card = ({ template, profile }) => {
+export const Card = ({ template, profile, setPopup, setDeleteTemp }) => {
 
     const [model, setModel] = useState(false);
     const navigate = useNavigate();
@@ -360,6 +364,12 @@ export const Card = ({ template, profile }) => {
     const handleNavigation = (e) => {
         e.preventDefault();
         navigate(`/template/edit/${template._id}`);
+    }
+
+    const handleDelete = (e) => {
+        e.preventDefault();
+        setDeleteTemp(template._id);
+        setPopup(true);
     }
 
     return (
@@ -375,7 +385,7 @@ export const Card = ({ template, profile }) => {
 
                         {model && (
                             <>
-                                <div className={`absolute z-[1000] top-12 ${styles.dropdownbox} right-2 rounded-md font-['Exo'] text-red-500 border-2 border-[#ffffff20] bg-[#11192869] p-2 backdrop-blur-md cursor-pointer`}>
+                                <div onClick={handleDelete} className={`absolute z-[1000] top-12 ${styles.dropdownbox} right-2 rounded-md font-['Exo'] text-red-500 border-2 border-[#ffffff20] bg-[#11192869] p-2 backdrop-blur-md cursor-pointer `}>
                                     Delete Template
                                 </div>
                             </>
@@ -410,3 +420,32 @@ export const Card = ({ template, profile }) => {
         </>
     );
 };
+
+const Popup = ({ setPopup, deleteTemp, getProfile }) => {
+
+    const handleDelete = async (e) => {
+        e.preventDefault();
+        await deleteTemplateApi(deleteTemp);
+        setPopup(false);
+        getProfile();
+    }
+
+    return (
+        <>
+            <div className='z-50 fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center overflow-hidden backdrop-blur-sm'>
+                <div className='bg-transparent border-slate-500 border-2 backdrop-blur-2xl text-white p-8 rounded-lg overflow-y-hidden relative'>
+                    <div onClick={(e) => { e.preventDefault(); setPopup(false) }} className="absolute top-3 right-4 w-5 rounded-full hover:bg-gray-400 duration-200 p-1 cursor-pointer">
+                        <img className="w-3" src={close} alt="Close " />
+                    </div>
+
+                    <h1 className='my-5 font-bold text-left md:text-center font-Vonique'>Are you want to delete this template?</h1>
+
+                    <div className="flex justify-end items-end gap-5">
+                        <Button onClick={(e) => { e.preventDefault(); setPopup(false) }} className="border-2 border-gray-800 rounded-xl">Cancel</Button>
+                        <Button onClick={handleDelete} className="bg-red-700 rounded-xl "> Delete</Button>
+                    </div>
+                </div>
+            </div>
+        </>
+    )
+}

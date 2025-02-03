@@ -12,12 +12,14 @@ const getTemplate = require("../controllers/getTemplate.controller.js")
 const {editTemplate} = require("../controllers/editTemplate.controller.js")
 const isAuthenticated = require("../middleware/auth.middleware.js");
 const likeAuthenticated = require("../middleware/like.middleware.js");
+const deleteTemplate = require("../controllers/deleteTemplate.controller.js");
 const upload = require("../config/multer.config");
 
 router.put("/increaseViews/:templateId", increaseViews)
 router.get("/getViews", isAuthenticated, getViews)
 router.post("/createtemplate", isAuthenticated, (req, res, next) => { upload.single("image")(req, res, (err) => { if (err) { return res.status(400).json({ message: err.message }); } createTemplate(req, res); }); })
 router.get("/getalltemplate", likeAuthenticated, getAllTemplates);
+router.delete("/delete/:id", isAuthenticated, deleteTemplate);
 router.put("/updateLike/:id", isAuthenticated, updateLike);
 router.put("/addbookmark/:id", isAuthenticated, addbookmark);
 router.get("/getbookmark", isAuthenticated, getBookmark);
