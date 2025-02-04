@@ -34,6 +34,12 @@ const ViewsChart = () => {
         setChartOptions({
           responsive: true,
           maintainAspectRatio: false,
+          layout: {
+            padding: {
+              left: 50,
+              right: 50,
+            }
+          },
           plugins: {
             title: {
               display: true,

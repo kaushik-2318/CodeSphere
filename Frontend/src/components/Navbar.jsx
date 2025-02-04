@@ -188,7 +188,7 @@ function DesktopNav() {
             ref={panelRef}
           >
             <ul className="flex flex-col font-['Exo'] gap-1">
-              <Link to="/profile">
+              <Link to="/dashboard">
                 <li className="p-1 pl-3 duration-300 border-2 border-transparent cursor-pointer hover:border-b-gray-700">
                   Profile
                 </li>

@@ -29,8 +29,14 @@ function UploadTemplateDetail({ register, errors, setFramework, setStyle, setLan
             if (e.target.value !== "") {
                 setLoader(true);
                 try {
-                    const { data } = takeScreenshotapi(url);
-                    setImageUrl("https://codesphere-ggi8.onrender.com" + data.screenshotPath);
+                    await takeScreenshotapi(url)
+                        .then((res) => {
+                            setImageUrl("https://codesphere-ggi8.onrender.com" + res.data.screenshotPath);
+                            // setImageUrl("http://localhost:3000" + res.data.screenshotPath);
+                        })
+                        .catch((err) => {
+                            console.log(err)
+                        })
                     setLoader(false);
                 } catch (error) {
                     setLoader(false);

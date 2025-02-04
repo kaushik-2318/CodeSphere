@@ -52,6 +52,7 @@ const userSchema = mongoose.Schema(
         bio: {
             type: String,
             default: "Add Bio",
+            maxlength: 340,
         },
         templates: [
             {

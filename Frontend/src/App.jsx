@@ -12,7 +12,6 @@ import Upload from "./pages/UploadPage.jsx";
 import { modalContext } from "./context/ModelContext.jsx";
 import Model from "./components/Model.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
-import Bookmark from "./pages/BookmarkPage.jsx";
 import Discover from "./pages/TemplatePage.jsx"
 import Edit from "./pages/TemplateEditPage.jsx"
 
@@ -57,9 +56,10 @@ function App() {
           <Route path='/template/:id' element={<Discover />} />
           <Route path='/template/edit/:id' element={<Edit />} />
           <Route path="/profile/:username" element={<Userprofile />} />
-          <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
           <Route path="/upload" element={<ProtectedRoute><Upload /></ProtectedRoute>} />
-          <Route path="/bookmark" element={<ProtectedRoute><Bookmark /></ProtectedRoute>} />
+          <Route path="/setting" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+          <Route path="/dashboard" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+          <Route path="/bookmark" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
         </Routes>
         <Footer />
       </modalContext.Provider>

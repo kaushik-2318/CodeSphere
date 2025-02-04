@@ -41,7 +41,6 @@ const templateSchema = mongoose.Schema(
         },
         language: {
             type: String,
-            required: true,
         },
         frameworkCode: {
             type: String,
@@ -53,7 +52,6 @@ const templateSchema = mongoose.Schema(
         },
         languageCode: {
             type: String,
-            required: true,
         },
         views: [{
             timestamp: {

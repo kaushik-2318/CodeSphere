@@ -6,7 +6,7 @@ import pin from "/icons/map-pin-fill.svg";
 import like from "/icons/heart-3-fill.svg";
 import bookmark from "/icons/bookmark-fill.svg";
 import more from "/icons/more-fill.svg";
-
+import dashbaord from "/icons/dashboard-fill.svg";
 import styles from "./css/profilepage.module.css";
 
 import { getUserProfileapi } from "../services/api";
@@ -47,7 +47,7 @@ export default function UserProfilePage() {
                             </div>
                         </div>
                         <Link to="/profile">
-                            <Button className="border-[1px] px-2 w-24 py-2 rounded-xl text-sm shadow-2xl backdrop-blur-md bg-blue-500">
+                            <Button className="border-[1px] px-2 w-24 py-2 rounded-xl text-sm shadow-2xl backdrop-blur-md bg-[#0064d7] outline-none border-none">
                                 Your Profile
                             </Button>
                         </Link>
@@ -55,16 +55,18 @@ export default function UserProfilePage() {
 
                     <div className="h-full font-['Exo']">
                         <ul className="flex flex-col text-white text-xl">
+                            <Link to="/dashboard">
+                                <li className="flex cursor-pointer gap-3 justify-start items-center mx-8 pl-1 py-5 duration-300 border-2 border-transparent hover:border-b-gray-700">
+                                    <img width={15} src={dashbaord} alt="" />
+                                    <span>Dashboard</span>
+                                </li>
+                            </Link>
                             <Link to="/bookmark">
                                 <li className="flex cursor-pointer gap-3 justify-start items-center mx-8 pl-1 py-5 duration-300 border-2 border-transparent hover:border-b-gray-700">
                                     <img width={20} src={bookmark} alt="Bookmark Icon" />
                                     Bookmarks
                                 </li>
                             </Link>
-                            <li className="flex cursor-pointer gap-3 justify-start items-center mx-8 pl-1 py-5 duration-300 border-2 border-transparent hover:border-b-gray-700">
-                                <img width={20} src={like} alt="Heart Icon" />
-                                Likes
-                            </li>
                         </ul>
                     </div>
                 </div>
@@ -142,12 +144,13 @@ export default function UserProfilePage() {
 }
 
 export const Card = ({ template, profile }) => {
+    const [model, setModel] = useState(false);
+
     const handleClick = (e) => {
         e.preventDefault();
         setModel(!model);
     };
 
-    const [model, setModel] = useState(false);
 
     return (
         <>
